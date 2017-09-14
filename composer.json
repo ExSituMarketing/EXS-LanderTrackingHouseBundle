@@ -1,0 +1,31 @@
+{
+    "name": "exs/exs-lander-tracking-house-bundle",
+    "type": "symfony-bundle",
+    "description": "This bundle manages query tracking parameters.",
+    "keywords": ["Symfony2", "bundle", "tracking", "parameter"],
+    "homepage": "https://github.com/ExSituMarketing/EXS-LanderTrackingHouseBundle",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Ex-Situ Marketing",
+            "email": "dev@ex-situ.com"
+        }
+    ],
+    "require": {
+        "php": "~5.5|~7.0",
+        "symfony/framework-bundle": "~2.8|~3.0",
+        "twig/twig": "~1.23|~2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8"
+    },
+    "autoload": {
+        "psr-4": { "EXS\\LanderTrackingHouseBundle\\": "" }
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}
+
