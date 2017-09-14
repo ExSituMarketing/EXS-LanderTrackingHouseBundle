@@ -1,5 +1,7 @@
 # EXS-LanderTrackingHouseBundle
 
+[![Build Status](https://travis-ci.org/ExSituMarketing/EXS-LanderTrackingHouseBundle.svg?branch=master)](https://travis-ci.org/ExSituMarketing/EXS-LanderTrackingHouseBundle)
+
 ## What is this bundle doing ?
 
 This bundle searches for tracking parameters in the request.
