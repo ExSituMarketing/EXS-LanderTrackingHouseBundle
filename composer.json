@@ -1,5 +1,5 @@
 {
-    "name": "exs/exs-lander-tracking-house-bundle",
+    "name": "exs/lander-tracking-house-bundle",
     "type": "symfony-bundle",
     "description": "This bundle manages query tracking parameters.",
     "keywords": ["Symfony2", "bundle", "tracking", "parameter"],
