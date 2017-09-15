@@ -22,9 +22,9 @@ class TrackingParameterExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('attachAweTracking', [$this, 'appendAweTrackingParameter']),
-            new \Twig_SimpleFilter('attachCambuilderTracking', [$this, 'appendCambuilderTrackingParameter']),
-            new \Twig_SimpleFilter('attachChaturbateTracking', [$this, 'appendChaturbateTrackingParameter']),
+            new \Twig_SimpleFilter('appendTrackingAWE', [$this, 'appendAweTrackingParameter']),
+            new \Twig_SimpleFilter('appendTrackingCambuilder', [$this, 'appendCambuilderTrackingParameter']),
+            new \Twig_SimpleFilter('appendTrackingChaturbate', [$this, 'appendChaturbateTrackingParameter']),
         ];
     }
 
