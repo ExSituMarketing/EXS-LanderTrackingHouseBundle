@@ -81,9 +81,9 @@ class TrackingParameterAppenderTest extends \PHPUnit_Framework_TestCase
         $persister->getTrackingParameters()->willReturn(
             new ParameterBag(['cmp' => 123]),
             new ParameterBag(['cmp' => 123]),
-            new ParameterBag(),
             new ParameterBag(['cmp' => 123]),
-            new ParameterBag(['cmp' => 123])
+            new ParameterBag(),
+            new ParameterBag()
         )->shouldBeCalledTimes(5);
 
         $appender = new TrackingParameterAppender($persister->reveal());
@@ -93,7 +93,7 @@ class TrackingParameterAppenderTest extends \PHPUnit_Framework_TestCase
         $someFormatter = $this->prophesize(TrackingParameterFormatterInterface::class);
         $someFormatter->format(new ParameterBag([
             'cmp' => 123,
-        ]))->willReturn(['cmp' => 123])->shouldBeCalledTimes(4);
+        ]))->willReturn(['some' => 123])->shouldBeCalledTimes(1);
         $someFormatter->format(new ParameterBag())->willReturn([])->shouldBeCalledTimes(1);
 
         $trackingParameters = $reflector->getProperty('formatters');
@@ -102,19 +102,20 @@ class TrackingParameterAppenderTest extends \PHPUnit_Framework_TestCase
             'some_formatter' => $someFormatter->reveal(),
         ]);
 
-        $result = $appender->append('/foo?bar=baz');
-        $this->assertEquals('/foo?bar=baz&cmp=123', $result);
-
-        $result = $appender->append('http://www.anotherdomain.tld/foo?bar=baz');
-        $this->assertEquals('http://www.anotherdomain.tld/foo?bar=baz&cmp=123', $result);
-
         $result = $appender->append('https://www.test.tld/foo');
         $this->assertEquals('https://www.test.tld/foo', $result);
 
-        $result = $appender->append('https://www.test.tld/foo?bar={cmp}');
-        $this->assertEquals('https://www.test.tld/foo?bar=123&cmp=123', $result);
+        $result = $appender->append('https://www.test.tld/foo?cmp={cmp}&bar=baz');
+        $this->assertEquals('https://www.test.tld/foo?cmp=123&bar=baz', $result);
 
-        $result = $appender->append('https://www.test.tld/foo?bar={cmp}');
-        $this->assertEquals('https://www.test.tld/foo?bar=123&cmp=123', $result);
+        $result = $appender->append('https://www.test.tld/foo?bar=baz', 'some');
+        $this->assertEquals('https://www.test.tld/foo?bar=baz&some=123', $result);
+
+        $result = $appender->append('https://www.test.tld/foo?bar=baz', 'some');
+        $this->assertEquals('https://www.test.tld/foo?bar=baz', $result);
+
+        $this->setExpectedException(InvalidConfigurationException::class, 'Unknown formatter "another".');
+
+        $appender->append('https://www.test.tld/foo?bar=baz', 'another');
     }
 }

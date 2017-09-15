@@ -36,20 +36,32 @@ public function registerBundles()
 
 ## Usage
 
-Use the "track" Twig filter on any url.
+Use the `appendTracking` Twig filter on any url.
 
 If the user have got the required tracking parameters, the tracking parameters will be added.
 
-```twig
-<a href="{{ 'https://www.foo.tld/bar' | track }}" target="_blank">Some link</a>
+### Use a specific formatter
 
-<a href="{{ url('homepage') | track }}" target="_blank">Some link</a>
+```twig
+<a href="{{ 'https://www.foo.tld/bar' | appendTracking('') }}" target="_blank">Some link</a>
+
+<a href="{{ url('homepage') | appendTracking }}" target="_blank">Some link</a>
+```
+
+### Replace placeholders
+
+```twig
+<a href="{{ url('homepage') | appendTracking('foo') }}" target="_blank">Some link</a>
+
+<a href="{{ 'https://www.foo.tld/bar' | appendTracking('foo') }}" target="_blank">Some link</a>
 ```
 
 We can also for to append some specific parameter.
 
 ```twig
-<a href="{{ 'https://www.foo.tld/bar?cmp={cmp}&exid={exid}&visit={visit}' | track }}" target="_blank">Some link</a>
+<a href="{{ url('homepage', {'cmp': '{cmp}', 'exid': '{exid}'}) | appendTracking }}" target="_blank">Some link</a>
+
+<a href="{{ 'https://www.foo.tld/bar?cmp={cmp}&exid={exid}&visit={visit}' | appendTracking }}" target="_blank">Some link</a>
 ```
 
 ## Adding an extracter

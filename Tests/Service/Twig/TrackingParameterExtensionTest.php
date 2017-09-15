@@ -16,17 +16,22 @@ class TrackingParameterExtensionTest extends \PHPUnit_Framework_TestCase
         $result = $extension->getFilters();
 
         $this->assertCount(1, $result);
-        $this->assertEquals('track', $result[0]->getName());
+        $this->assertEquals('appendTracking', $result[0]->getName());
     }
 
-    public function testAppendTrackingParameter()
+    public function testAppendTracking()
     {
         $appender = $this->prophesize(TrackingParameterAppender::class);
-        $appender->append('https://www.simple.tld/foo')->willReturn('https://www.simple.tld/foo?track=123~UUID0123456789~5')->shouldBeCalledTimes(1);
+        $appender->append('https://www.simple.tld/foo', null)->willReturn('https://www.simple.tld/foo?track=123~UUID0123456789~5')->shouldBeCalledTimes(1);
+        $appender->append('https://www.simple.tld/foo', 'foo')->willReturn('https://www.simple.tld/foo?track=123~UUID0123456789~5')->shouldBeCalledTimes(1);
 
         $extension = new TrackingParameterExtension($appender->reveal());
 
-        $result = $extension->appendTrackingParameter('https://www.simple.tld/foo');
+        $result = $extension->appendTracking('https://www.simple.tld/foo');
+
+        $this->assertEquals('https://www.simple.tld/foo?track=123~UUID0123456789~5', $result);
+
+        $result = $extension->appendTracking('https://www.simple.tld/foo', 'foo');
 
         $this->assertEquals('https://www.simple.tld/foo?track=123~UUID0123456789~5', $result);
     }
