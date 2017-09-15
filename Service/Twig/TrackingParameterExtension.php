@@ -27,7 +27,7 @@ class TrackingParameterExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('appendTracking', [$this, 'appendTrackingParameter']),
+            new \Twig_SimpleFilter('appendTracking', [$this, 'appendTracking']),
         ];
     }
 
