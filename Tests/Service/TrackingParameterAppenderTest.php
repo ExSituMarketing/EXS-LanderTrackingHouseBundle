@@ -2,7 +2,6 @@
 
 namespace EXS\LanderTrackingHouseBundle\Tests\Service;
 
-use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\CmpTrackingParameterManager;
 use EXS\LanderTrackingHouseBundle\Service\TrackingParameterAppender;
 use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\TrackingParameterFormatterInterface;
 use EXS\LanderTrackingHouseBundle\Service\TrackingParameterPersister;

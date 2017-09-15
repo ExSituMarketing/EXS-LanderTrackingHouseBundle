@@ -74,10 +74,11 @@ class TrackingParameterAppender
      * Appends the query parameters depending on domain's formatters defined in configuration.
      *
      * @param string $url
+     * @param string $formatterName
      *
      * @return string
      */
-    public function append($url)
+    public function append($url, $formatterName = null)
     {
         $urlComponents = parse_url($url);
 
@@ -88,20 +89,29 @@ class TrackingParameterAppender
 
         $trackingParameters = $this->persister->getTrackingParameters();
 
-        /** Call formatters to get parameters to add to the query's parameters. */
-        foreach ($this->formatters as $formatter) {
-            /* Add formatter's result to the set of parameters */
+        if (null === $formatterName) {
+            /** Search for tracking parameters to replace in query's parameters. */
+            foreach ($parameters as $parameterName => $parameterValue) {
+                if (preg_match('`^{\s?(?<parameter>[a-z0-9]+)\s?}$`i', $parameterValue, $matches)) {
+                    $parameters[$parameterName] = $trackingParameters->get($matches['parameter'], null);
+                }
+            }
+        } else {
+            /** Call formatter to get parameters to add to the query's parameters. */
+            $foundFilters = array_filter(array_keys($this->formatters), function ($formatterId) use ($formatterName) {
+                $pattern = sprintf('`^(?:(?:.*)\.)?%s(?:_(?:.*))?$`i', $formatterName);
+
+                return (0 !== (int)preg_match($pattern, $formatterId));
+            });
+
+            if (empty($foundFilters)) {
+                throw new InvalidConfigurationException(sprintf('Unknown formatter "%s".', $formatterName));
+            }
+
             $parameters = array_merge(
                 $parameters,
-                $formatter->format($trackingParameters)
+                $this->formatters[current($foundFilters)]->format($trackingParameters)
             );
-        }
-
-        /** Search for tracking parameters to replace in query's parameters. */
-        foreach ($parameters as $parameterName => $parameterValue) {
-            if (preg_match('`^{\s?(?<parameter>[a-z0-9]+)\s?}$`i', $parameterValue, $matches)) {
-                $parameters[$parameterName] = $trackingParameters->get($matches['parameter'], null);
-            }
         }
 
         /** Rebuild the query parameters string. */
