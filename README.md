@@ -43,20 +43,12 @@ If the user have got the required tracking parameters, the tracking parameters w
 ### Use a specific formatter
 
 ```twig
-<a href="{{ 'https://www.foo.tld/bar' | appendTracking('') }}" target="_blank">Some link</a>
+<a href="{{ 'https://www.foo.tld/bar' | appendTracking('foo') }}" target="_blank">Some link</a>
 
-<a href="{{ url('homepage') | appendTracking }}" target="_blank">Some link</a>
+<a href="{{ url('homepage') | appendTracking('foo') }}" target="_blank">Some link</a>
 ```
 
 ### Replace placeholders
-
-```twig
-<a href="{{ url('homepage') | appendTracking('foo') }}" target="_blank">Some link</a>
-
-<a href="{{ 'https://www.foo.tld/bar' | appendTracking('foo') }}" target="_blank">Some link</a>
-```
-
-We can also for to append some specific parameter.
 
 ```twig
 <a href="{{ url('homepage', {'cmp': '{cmp}', 'exid': '{exid}'}) | appendTracking }}" target="_blank">Some link</a>
