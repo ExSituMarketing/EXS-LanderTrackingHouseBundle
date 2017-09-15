@@ -22,17 +22,39 @@ class TrackingParameterExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('track', [$this, 'appendTrackingParameter']),
+            new \Twig_SimpleFilter('attachAweTracking', [$this, 'appendAweTrackingParameter']),
+            new \Twig_SimpleFilter('attachCambuilderTracking', [$this, 'appendCambuilderTrackingParameter']),
+            new \Twig_SimpleFilter('attachChaturbateTracking', [$this, 'appendChaturbateTrackingParameter']),
         ];
     }
 
     /**
      * @param string $url
-     *
+     * Awe
      * @return string
      */
-    public function appendTrackingParameter($url)
+    public function appendAweTrackingParameter($url)
     {
-        return $this->appender->append($url);
+        return $this->appender->append($url, 'Awe');
+    }
+
+    /**
+     * @param string $url
+     * Cambuilder
+     * @return string
+     */
+    public function appendCambuilderTrackingParameter($url)
+    {
+        return $this->appender->append($url, 'Cambuilder');
+    }
+
+    /**
+     * @param string $url
+     * Chaturbate
+     * @return string
+     */
+    public function appendChaturbateTrackingParameter($url)
+    {
+        return $this->appender->append($url, 'Chaturbate');
     }
 }

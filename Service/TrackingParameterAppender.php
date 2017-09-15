@@ -74,10 +74,11 @@ class TrackingParameterAppender
      * Appends the query parameters depending on domain's formatters defined in configuration.
      *
      * @param string $url
+     * @param string $sponsor (i.e. Awe, Cambuilder, Chaturbate)
      *
      * @return string
      */
-    public function append($url)
+    public function append($url, $sponsor)
     {
         $urlComponents = parse_url($url);
 
