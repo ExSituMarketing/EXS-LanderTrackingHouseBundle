@@ -31,10 +31,11 @@ class CuvTrackingParameterManager implements TrackingParameterExtracterInterface
         } elseif (
             $request->cookies->has('cmp')
             && $request->cookies->has('exid')
+            && $request->cookies->has('visit')
         ) {
             $trackingParameters['cmp'] = $request->cookies->get('cmp');
             $trackingParameters['exid'] = $request->cookies->get('exid');
-            $trackingParameters['visit'] = $request->cookies->get('visit', 1);
+            $trackingParameters['visit'] = $request->cookies->get('visit');
         }
 
         return $trackingParameters;
@@ -52,12 +53,13 @@ class CuvTrackingParameterManager implements TrackingParameterExtracterInterface
         if (
             $trackingParameters->has('cmp')
             && $trackingParameters->has('exid')
+            && $trackingParameters->has('visit')
         ) {
             $cuv = sprintf(
                 '%s~%s~%s',
                 $trackingParameters->get('cmp'),
                 $trackingParameters->get('exid'),
-                $trackingParameters->get('visit', 1)
+                $trackingParameters->get('visit')
             );
         }
 

@@ -20,8 +20,8 @@ class VisitTrackingParameterManager implements TrackingParameterExtracterInterfa
 
         if (null !== $visit = $request->query->get('visit')) {
             $trackingParameters['visit'] = $visit;
-        } else {
-            $trackingParameters['visit'] = $request->cookies->get('visit', 1);
+        } elseif ($request->cookies->has('visit')) {
+            $trackingParameters['visit'] = $request->cookies->get('visit');
         }
 
         return $trackingParameters;

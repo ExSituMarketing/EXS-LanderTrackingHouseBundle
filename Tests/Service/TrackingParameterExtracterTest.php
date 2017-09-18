@@ -11,7 +11,7 @@ class TrackingParameterExtracterTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetupWithValidParameters()
     {
-        $extracter = new TrackingParameterExtracter();
+        $extracter = new TrackingParameterExtracter(1, 'exid', 1);
 
         $manager = $this->prophesize(CmpTrackingParameterManager::class);
 
@@ -32,7 +32,7 @@ class TrackingParameterExtracterTest extends \PHPUnit_Framework_TestCase
         $cmpManager = $this->prophesize(CmpTrackingParameterManager::class);
         $cmpManager->extract($revealedRequest)->willReturn(['cmp' => 123])->shouldBeCalledTimes(1);
 
-        $extracter = new TrackingParameterExtracter();
+        $extracter = new TrackingParameterExtracter(1, 'exid', 1);
 
         $reflector = new \ReflectionObject($extracter);
 
@@ -46,5 +46,7 @@ class TrackingParameterExtracterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(ParameterBag::class, $result);
         $this->assertEquals(123, $result->get('cmp'));
+        $this->assertEquals('exid', $result->get('exid'));
+        $this->assertEquals(1, $result->get('visit'));
     }
 }

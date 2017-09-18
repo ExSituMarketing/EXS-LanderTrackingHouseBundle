@@ -32,11 +32,12 @@ class CuvpTrackingParameterManager implements TrackingParameterExtracterInterfac
         } elseif (
             $request->cookies->has('cmp')
             && $request->cookies->has('exid')
+            && $request->cookies->has('visit')
             && $request->cookies->has('product_id')
         ) {
             $trackingParameters['cmp'] = $request->cookies->get('cmp');
             $trackingParameters['exid'] = $request->cookies->get('exid');
-            $trackingParameters['visit'] = $request->cookies->get('visit', 1);
+            $trackingParameters['visit'] = $request->cookies->get('visit');
             $trackingParameters['product_id'] = $request->cookies->get('product_id');
         }
 
@@ -55,13 +56,14 @@ class CuvpTrackingParameterManager implements TrackingParameterExtracterInterfac
         if (
             $trackingParameters->has('cmp')
             && $trackingParameters->has('exid')
+            && $trackingParameters->has('visit')
             && $trackingParameters->has('product_id')
         ) {
             $cuvp = sprintf(
                 '%s~%s~%s~%s',
                 $trackingParameters->get('cmp'),
                 $trackingParameters->get('exid'),
-                $trackingParameters->get('visit', 1),
+                $trackingParameters->get('visit'),
                 $trackingParameters->get('product_id')
             );
         }

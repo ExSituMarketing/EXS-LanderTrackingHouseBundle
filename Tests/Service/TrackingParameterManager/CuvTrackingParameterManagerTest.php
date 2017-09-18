@@ -41,9 +41,10 @@ class CuvTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $cookies = $this->prophesize(ParameterBag::class);
         $cookies->has('cmp')->willReturn(true)->shouldBeCalledTimes(1);
         $cookies->has('exid')->willReturn(true)->shouldBeCalledTimes(1);
+        $cookies->has('visit')->willReturn(true)->shouldBeCalledTimes(1);
         $cookies->get('cmp')->willReturn(123)->shouldBeCalledTimes(1);
         $cookies->get('exid')->willReturn('UUID987654321')->shouldBeCalledTimes(1);
-        $cookies->get('visit', 1)->willReturn('5')->shouldBeCalledTimes(1);
+        $cookies->get('visit')->willReturn('5')->shouldBeCalledTimes(1);
 
         $request->cookies = $cookies;
 
@@ -87,7 +88,6 @@ class CuvTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('visit', $result);
         $this->assertEquals(5, $result['visit']);
     }
-
 
     public function testFormatWithEmptyArray()
     {

@@ -27,9 +27,12 @@ class UvTrackingParameterManager implements TrackingParameterExtracterInterface,
         ) {
             $trackingParameters['exid'] = $matches['exid'];
             $trackingParameters['visit'] = $matches['visit'];
-        } elseif ($request->cookies->has('exid')) {
+        } elseif (
+            $request->cookies->has('exid')
+            && $request->cookies->has('visit')
+        ) {
             $trackingParameters['exid'] = $request->cookies->get('exid');
-            $trackingParameters['visit'] = $request->cookies->get('visit', 1);
+            $trackingParameters['visit'] = $request->cookies->get('visit');
         }
 
         return $trackingParameters;
@@ -44,12 +47,14 @@ class UvTrackingParameterManager implements TrackingParameterExtracterInterface,
     {
         $uv = null;
 
-        if ($trackingParameters->has('exid'))
-        {
+        if (
+            $trackingParameters->has('exid')
+            && $trackingParameters->has('visit')
+        ) {
             $uv = sprintf(
                 '%s~%s',
                 $trackingParameters->get('exid'),
-                $trackingParameters->get('visit', 1)
+                $trackingParameters->get('visit')
             );
         }
 

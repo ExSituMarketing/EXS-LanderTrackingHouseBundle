@@ -6,7 +6,7 @@ use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\VisitTracking
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
-class VisitTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCase
+class VisitTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testExtractWithoutParametersNorCookies()
     {
@@ -18,7 +18,7 @@ class VisitTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCase
         $request->query = $query;
 
         $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->get('visit', 1)->willReturn(1)->shouldBeCalledTimes(1);
+        $cookies->has('visit')->willReturn(false)->shouldBeCalledTimes(1);
 
         $request->cookies = $cookies;
 
@@ -26,10 +26,7 @@ class VisitTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCase
 
         $result = $manager->extract($request->reveal());
 
-        $this->assertCount(1, $result);
-
-        $this->assertArrayHasKey('visit', $result);
-        $this->assertEquals(1, $result['visit']);
+        $this->assertEmpty($result);
     }
 
     public function testExtractWithoutParametersButCookies()
@@ -42,7 +39,8 @@ class VisitTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCase
         $request->query = $query;
 
         $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->get('visit', 1)->willReturn(5)->shouldBeCalledTimes(1);
+        $cookies->has('visit')->willReturn(true)->shouldBeCalledTimes(1);
+        $cookies->get('visit')->willReturn(5)->shouldBeCalledTimes(1);
 
         $request->cookies = $cookies;
 

@@ -15,15 +15,37 @@ use Symfony\Component\HttpFoundation\Request;
 class TrackingParameterExtracter
 {
     /**
+     * @var string
+     */
+    private $defaultCmp;
+
+    /**
+     * @var string
+     */
+    private $defaultExid;
+
+    /**
+     * @var int
+     */
+    private $defaultVisit;
+
+    /**
      * @var array
      */
     private $extracters;
 
     /**
-     * TrackingParameterExtractor constructor.
+     * TrackingParameterExtracter constructor.
+     *
+     * @param string $defaultCmp
+     * @param string $defaultExid
+     * @param int    $defaultVisit
      */
-    public function __construct()
+    public function __construct($defaultCmp, $defaultExid, $defaultVisit)
     {
+        $this->defaultCmp = $defaultCmp;
+        $this->defaultExid = $defaultExid;
+        $this->defaultVisit = $defaultVisit;
         $this->extracters = [];
     }
 
@@ -52,7 +74,11 @@ class TrackingParameterExtracter
      */
     public function extract(Request $request)
     {
-        $trackingParameters = new ParameterBag();
+        $trackingParameters = new ParameterBag([
+            'cmp' => $this->defaultCmp,
+            'exid' => $this->defaultExid,
+            'visit' => $this->defaultVisit,
+        ]);
 
         foreach ($this->extracters as $extracter) {
             /** @param TrackingParameterExtracterInterface $extracter */

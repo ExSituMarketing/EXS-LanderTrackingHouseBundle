@@ -30,10 +30,11 @@ class UvpTrackingParameterManager implements TrackingParameterExtracterInterface
             $trackingParameters['product_id'] = $matches['product_id'];
         } elseif (
             $request->cookies->has('exid')
+            && $request->cookies->has('visit')
             && $request->cookies->has('product_id')
         ) {
             $trackingParameters['exid'] = $request->cookies->get('exid');
-            $trackingParameters['visit'] = $request->cookies->get('visit', 1);
+            $trackingParameters['visit'] = $request->cookies->get('visit');
             $trackingParameters['product_id'] = $request->cookies->get('product_id');
         }
 
@@ -51,12 +52,13 @@ class UvpTrackingParameterManager implements TrackingParameterExtracterInterface
 
         if (
             $trackingParameters->has('exid')
+            && $trackingParameters->has('visit')
             && $trackingParameters->has('product_id')
         ) {
             $uvp = sprintf(
                 '%s~%s~%s',
                 $trackingParameters->get('exid'),
-                $trackingParameters->get('visit', 1),
+                $trackingParameters->get('visit'),
                 $trackingParameters->get('product_id')
             );
         }

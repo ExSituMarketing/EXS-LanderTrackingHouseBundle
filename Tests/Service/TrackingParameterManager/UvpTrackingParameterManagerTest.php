@@ -40,9 +40,10 @@ class UvpTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
 
         $cookies = $this->prophesize(ParameterBag::class);
         $cookies->has('exid')->willReturn(true)->shouldBeCalledTimes(1);
+        $cookies->has('visit')->willReturn(true)->shouldBeCalledTimes(1);
         $cookies->has('product_id')->willReturn(true)->shouldBeCalledTimes(1);
         $cookies->get('exid')->willReturn('UUID987654321')->shouldBeCalledTimes(1);
-        $cookies->get('visit', 1)->willReturn('5')->shouldBeCalledTimes(1);
+        $cookies->get('visit')->willReturn('5')->shouldBeCalledTimes(1);
         $cookies->get('product_id')->willReturn('5')->shouldBeCalledTimes(1);
 
         $request->cookies = $cookies;

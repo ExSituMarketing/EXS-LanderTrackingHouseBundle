@@ -1,5 +1,9 @@
 services:
     exs_tracking.tracking_parameter_extracter:
+        arguments:
+            - '%exs_lander_tracking_house.default_cmp%'
+            - '%exs_lander_tracking_house.default_exid%'
+            - '%exs_lander_tracking_house.default_visit%'
         class: 'EXS\LanderTrackingHouseBundle\Service\TrackingParameterExtracter'
 
     exs_tracking.tracking_parameter_persister:
