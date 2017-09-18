@@ -23,7 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('default_cmp')
-                    ->defaultValue(1)
+                    ->defaultValue(null)
                 ->end()
                 ->scalarNode('default_exid')
                     ->defaultValue('exid')

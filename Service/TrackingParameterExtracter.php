@@ -74,11 +74,19 @@ class TrackingParameterExtracter
      */
     public function extract(Request $request)
     {
-        $trackingParameters = new ParameterBag([
-            'cmp' => $this->defaultCmp,
-            'exid' => $this->defaultExid,
-            'visit' => $this->defaultVisit,
-        ]);
+        $trackingParameters = new ParameterBag();
+
+        if (null !== $this->defaultCmp) {
+            $trackingParameters->set('cmp', $this->defaultCmp);
+        }
+
+        if (null !== $this->defaultExid) {
+            $trackingParameters->set('exid', $this->defaultExid);
+        }
+
+        if (null !== $this->defaultVisit) {
+            $trackingParameters->set('visit', $this->defaultVisit);
+        }
 
         foreach ($this->extracters as $extracter) {
             /** @param TrackingParameterExtracterInterface $extracter */
