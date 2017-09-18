@@ -19,6 +19,7 @@ services:
         tags:
             - { name: 'kernel.event_subscriber' }
 
+    # Extracter only.
     exs_tracking.cmp_manager:
         class: 'EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\CmpTrackingParameterManager'
         tags:
@@ -34,6 +35,49 @@ services:
         tags:
             - { name: 'exs_tracking.parameter_extracter' }
 
+    exs_tracking.product_id_manager:
+        class: 'EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\ProductIdTrackingParameterManager'
+        tags:
+            - { name: 'exs_tracking.parameter_extracter' }
+
+    # Extracter and Formatter.
+    exs_tracking.cu_manager:
+        class: 'EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\CuTrackingParameterManager'
+        tags:
+            - { name: 'exs_tracking.parameter_extracter' }
+            - { name: 'exs_tracking.parameter_formatter' }
+
+    exs_tracking.cup_manager:
+        class: 'EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\CupTrackingParameterManager'
+        tags:
+            - { name: 'exs_tracking.parameter_extracter' }
+            - { name: 'exs_tracking.parameter_formatter' }
+
+    exs_tracking.cuvp_manager:
+        class: 'EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\CuvpTrackingParameterManager'
+        tags:
+            - { name: 'exs_tracking.parameter_extracter' }
+            - { name: 'exs_tracking.parameter_formatter' }
+
+    exs_tracking.cuv_manager:
+        class: 'EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\CuvTrackingParameterManager'
+        tags:
+            - { name: 'exs_tracking.parameter_extracter' }
+            - { name: 'exs_tracking.parameter_formatter' }
+
+    exs_tracking.uv_manager:
+        class: 'EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\UvTrackingParameterManager'
+        tags:
+            - { name: 'exs_tracking.parameter_extracter' }
+            - { name: 'exs_tracking.parameter_formatter' }
+
+    exs_tracking.uvp_manager:
+        class: 'EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\UvpTrackingParameterManager'
+        tags:
+            - { name: 'exs_tracking.parameter_extracter' }
+            - { name: 'exs_tracking.parameter_formatter' }
+
+    # Twig extension
     exs_tracking.tracking_parameter_extension:
         class: 'EXS\LanderTrackingHouseBundle\Service\Twig\TrackingParameterExtension'
         arguments:

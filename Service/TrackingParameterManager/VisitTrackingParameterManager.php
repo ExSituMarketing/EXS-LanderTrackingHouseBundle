@@ -16,12 +16,12 @@ class VisitTrackingParameterManager implements TrackingParameterExtracterInterfa
      */
     public function extract(Request $request)
     {
-        $trackingParameters = ['visit' => 1];
+        $trackingParameters = [];
 
         if (null !== $visit = $request->query->get('visit')) {
             $trackingParameters['visit'] = $visit;
-        } elseif ($request->cookies->has('visit')) {
-            $trackingParameters['visit'] = $request->cookies->get('visit');
+        } else {
+            $trackingParameters['visit'] = $request->cookies->get('visit', 1);
         }
 
         return $trackingParameters;

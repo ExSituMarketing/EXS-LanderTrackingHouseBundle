@@ -2,34 +2,31 @@
 
 namespace EXS\LanderTrackingHouseBundle\Tests\Service\TrackingParameterManager;
 
-use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\VisitTrackingParameterManager;
+use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\ProductIdTrackingParameterManager;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
-class VisitTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCase
+class ProductIdTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCase
 {
     public function testExtractWithoutParametersNorCookies()
     {
         $request = $this->prophesize(Request::class);
 
         $query = $this->prophesize(ParameterBag::class);
-        $query->get('visit')->willReturn(null)->shouldBeCalledTimes(1);
+        $query->get('p')->willReturn(null)->shouldBeCalledTimes(1);
 
         $request->query = $query;
 
         $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->get('visit', 1)->willReturn(1)->shouldBeCalledTimes(1);
+        $cookies->has('product_id')->willReturn(false)->shouldBeCalledTimes(1);
 
         $request->cookies = $cookies;
 
-        $manager = new VisitTrackingParameterManager();
+        $manager = new ProductIdTrackingParameterManager();
 
         $result = $manager->extract($request->reveal());
 
-        $this->assertCount(1, $result);
-
-        $this->assertArrayHasKey('visit', $result);
-        $this->assertEquals(1, $result['visit']);
+        $this->assertEmpty($result);
     }
 
     public function testExtractWithoutParametersButCookies()
@@ -37,23 +34,24 @@ class VisitTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCase
         $request = $this->prophesize(Request::class);
 
         $query = $this->prophesize(ParameterBag::class);
-        $query->get('visit')->willReturn(null)->shouldBeCalledTimes(1);
+        $query->get('p')->willReturn(null)->shouldBeCalledTimes(1);
 
         $request->query = $query;
 
         $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->get('visit', 1)->willReturn(5)->shouldBeCalledTimes(1);
+        $cookies->has('product_id')->willReturn(true)->shouldBeCalledTimes(1);
+        $cookies->get('product_id')->willReturn(5)->shouldBeCalledTimes(1);
 
         $request->cookies = $cookies;
 
-        $manager = new VisitTrackingParameterManager();
+        $manager = new ProductIdTrackingParameterManager();
 
         $result = $manager->extract($request->reveal());
 
         $this->assertCount(1, $result);
 
-        $this->assertArrayHasKey('visit', $result);
-        $this->assertEquals(5, $result['visit']);
+        $this->assertArrayHasKey('product_id', $result);
+        $this->assertEquals(5, $result['product_id']);
     }
 
     public function testExtractWithParameters()
@@ -61,17 +59,17 @@ class VisitTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCase
         $request = $this->prophesize(Request::class);
 
         $query = $this->prophesize(ParameterBag::class);
-        $query->get('visit')->willReturn(5)->shouldBeCalledTimes(1);
+        $query->get('p')->willReturn(5)->shouldBeCalledTimes(1);
 
         $request->query = $query;
 
-        $manager = new VisitTrackingParameterManager();
+        $manager = new ProductIdTrackingParameterManager();
 
         $result = $manager->extract($request->reveal());
 
         $this->assertCount(1, $result);
 
-        $this->assertArrayHasKey('visit', $result);
-        $this->assertEquals(5, $result['visit']);
+        $this->assertArrayHasKey('product_id', $result);
+        $this->assertEquals(5, $result['product_id']);
     }
 }

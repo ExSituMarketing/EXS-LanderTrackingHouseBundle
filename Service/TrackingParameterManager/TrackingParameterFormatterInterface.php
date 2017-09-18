@@ -12,7 +12,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 interface TrackingParameterFormatterInterface
 {
     /**
-     * Returns an array of parameters (key => value) to append to any url as query parameters.
+     * Receive all the tracking parameters.
+     * Returns a key/value array of parameters to append to any url as query parameters.
      *
      * @param ParameterBag $trackingParameters
      *
