@@ -25,8 +25,20 @@ class TrackingParameterPass implements CompilerPassInterface
 
             $extracters = [];
             foreach ($taggedServices as $id => $tags) {
-                $extracters[str_replace('exs_tracking.', '', $id)] = new Reference($id);
+                $extracters[] = [
+                    'priority' => isset($tags[0]['priority']) ? (int)$tags[0]['priority'] : 0,
+                    'name' => str_replace('exs_tracking.', '', $id),
+                    'reference' => new Reference($id),
+                ];
             }
+
+            usort($extracters, function ($a, $b) {
+                if ($a['priority'] == $b['priority']) {
+                    return 0;
+                }
+
+                return ($a['priority'] < $b['priority']) ? -1 : 1;
+            });
 
             $definition->addMethodCall('setup', [$extracters]);
         }

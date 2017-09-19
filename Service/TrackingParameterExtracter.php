@@ -38,20 +38,20 @@ class TrackingParameterExtracter
      */
     public function setup(array $extracters)
     {
-        foreach ($extracters as $extracterName => $extracter) {
+        foreach ($extracters as $extracter) {
             if (
-                (false === ($extracter instanceof TrackingParameterQueryExtracterInterface))
-                && (false === ($extracter instanceof TrackingParameterCookieExtracterInterface))
-                && (false === ($extracter instanceof TrackingParameterInitializerInterface))
+                (false === ($extracter['reference'] instanceof TrackingParameterQueryExtracterInterface))
+                && (false === ($extracter['reference'] instanceof TrackingParameterCookieExtracterInterface))
+                && (false === ($extracter['reference'] instanceof TrackingParameterInitializerInterface))
             ) {
                 throw new InvalidConfigurationException(sprintf(
                     'Invalid tracking parameter extracter "%s".',
-                    $extracterName
+                    $extracter['name']
                 ));
             }
-        }
 
-        $this->extracters = $extracters;
+            $this->extracters[$extracter['name']] = $extracter['reference'];
+        }
     }
 
     /**
@@ -65,24 +65,24 @@ class TrackingParameterExtracter
     {
         $trackingParameters = new ParameterBag();
 
-        /** First search the query. */
+        /** Set default values. */
         foreach ($this->extracters as $extracter) {
-            if ($extracter instanceof TrackingParameterQueryExtracterInterface) {
-                $trackingParameters->add($extracter->extractFromQuery($request->query));
+            if ($extracter instanceof TrackingParameterInitializerInterface) {
+                $trackingParameters->add($extracter->initialize());
             }
         }
 
-        /** The search the cookies. */
+        /** Override default value by cookies' value if set. */
         foreach ($this->extracters as $extracter) {
             if ($extracter instanceof TrackingParameterCookieExtracterInterface) {
                 $trackingParameters->add($extracter->extractFromCookies($request->cookies));
             }
         }
 
-        /** Set default value if not found. */
+        /** Override cookies' value by query's value if set. */
         foreach ($this->extracters as $extracter) {
-            if ($extracter instanceof TrackingParameterInitializerInterface) {
-                $trackingParameters->add($extracter->initialize());
+            if ($extracter instanceof TrackingParameterQueryExtracterInterface) {
+                $trackingParameters->add($extracter->extractFromQuery($request->query));
             }
         }
 
