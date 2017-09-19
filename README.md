@@ -56,6 +56,26 @@ If the user have got the required tracking parameters, the tracking parameters w
 <a href="{{ 'https://www.foo.tld/bar?cmp={cmp}&exid={exid}&visit={visit}' | appendTracking }}" target="_blank">Some link</a>
 ```
 
+## Builtin extractor
+- `cmp` searches for the parameter named `cmp` in the request. This parameter contains the `cmp`'s value and is extracted as internal parameter `cmp`.
+- `cup` searches for the parameter named `cup` in the request. This parameter contains a string composed of `{cmp}~{exid}~{product_id}` and is extracted as internal parameters `cmp`, `exid` and `product_id`.
+- `cu` searches for the parameter named `cu` in the request. This parameter contains a string composed of `{cmp}~{exid}` and is extracted as internal parameters `cmp` and `exid`.
+- `cuvp` searches for the parameter named `cuvp` in the request. This parameter contains a string composed of `{cmp}~{exid}~{visit}~{product_id}` and is extracted as internal parameters `cmp`, `exid`, `visit` and `product_id`.
+- `cuv` searches for the parameter named `cuv` in the request. This parameter contains a string composed of `{cmp}~{exid}~{visit}` and is extracted as internal parameters `cmp`, `exid` and `visit`.
+- `exid` searches for the parameter named `exid` or `u` or `uuid` in the request (Will use the first match). This parameter contains the `exid`'s value and is extracted as internal parameters `exid`.
+- `product_id` searches for the parameter named `p` in the request. This parameter contains the `product_id`'s value and is extracted as internal parameters `product_id`.
+- `uvp` searches for the parameter named `uvp` in the request. This parameter contains a string composed of `{exid}~{visit}~{product_id}` and is extracted as internal parameters `exid`, `visit` and `product_id`.
+- `uv` searches for the parameter named `uv` in the request. This parameter contains a string composed of `{exid}~{visit}` and is extracted as internal parameters `exid` and `visit`.
+- `visit` searches for the parameter named `visit` in the request. This parameter contains the `visit`'s value and is extracted as internal parameters `visit`.
+
+## Builtin formatter
+- `cup` will use `cmp`, `exid` and `product_id` internal parameters to append the parameter `cup` composed of `{cmp}~{exid}~{product_id}`.
+- `cu` will use `cmp` and `exid` internal parameters to append the parameter `cu` composed of `{cmp}~{exid}`.
+- `cuvp` will use `cmp`, `exid`, `visit` and `product_id` internal parameters to append the parameter `cuvp` composed of `{cmp}~{exid}~{visit}~{produt_id}`.
+- `cuv` will use `cmp`, `exid` and `visit` internal parameters to append the parameter `cuv` composed of `{cmp}~{exid}~{visit}`.
+- `uvp` will use `exid`, `visit` and `product_id` internal parameters to append the parameter `uvp` composed of `{exid}~{visit}~{produt_id}`.
+- `uv` will use `exid` and `visit` internal parameters to append the parameter `uv` composed of `{exid}~{visit}`.
+
 ## Adding an extracter
 
 The bundle uses extracter services to find and get tracking parameters from the request. 
