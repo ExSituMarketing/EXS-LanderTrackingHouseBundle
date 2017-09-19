@@ -2,26 +2,38 @@
 
 namespace EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class ProductIdTrackingParameterManager
  *
  * @package EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager
  */
-class ProductIdTrackingParameterManager implements TrackingParameterExtracterInterface
+class ProductIdTrackingParameterManager implements TrackingParameterQueryExtracterInterface, TrackingParameterCookieExtracterInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function extract(Request $request)
+    public function extractFromQuery(ParameterBag $query)
     {
         $trackingParameters = [];
 
-        if (null !== $productId = $request->query->get('p')) {
+        if (null !== $productId = $query->get('p')) {
             $trackingParameters['product_id'] = $productId;
-        } elseif ($request->cookies->has('product_id')) {
-            $trackingParameters['product_id'] = $request->cookies->get('product_id');
+        }
+
+        return $trackingParameters;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function extractFromCookies(ParameterBag $cookies)
+    {
+        $trackingParameters = [];
+
+        if (null !== $productId = $cookies->get('product_id')) {
+            $trackingParameters['product_id'] = $productId;
         }
 
         return $trackingParameters;

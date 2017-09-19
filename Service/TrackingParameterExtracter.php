@@ -2,7 +2,9 @@
 
 namespace EXS\LanderTrackingHouseBundle\Service;
 
-use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\TrackingParameterExtracterInterface;
+use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\TrackingParameterCookieExtracterInterface;
+use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\TrackingParameterInitializerInterface;
+use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\TrackingParameterQueryExtracterInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,41 +17,21 @@ use Symfony\Component\HttpFoundation\Request;
 class TrackingParameterExtracter
 {
     /**
-     * @var string
-     */
-    private $defaultCmp;
-
-    /**
-     * @var string
-     */
-    private $defaultExid;
-
-    /**
-     * @var int
-     */
-    private $defaultVisit;
-
-    /**
      * @var array
      */
     private $extracters;
 
     /**
      * TrackingParameterExtracter constructor.
-     *
-     * @param string $defaultCmp
-     * @param string $defaultExid
-     * @param int    $defaultVisit
      */
-    public function __construct($defaultCmp, $defaultExid, $defaultVisit)
+    public function __construct()
     {
-        $this->defaultCmp = $defaultCmp;
-        $this->defaultExid = $defaultExid;
-        $this->defaultVisit = $defaultVisit;
         $this->extracters = [];
     }
 
     /**
+     * Set all formatters available.
+     *
      * @param array $extracters
      *
      * @throws InvalidConfigurationException
@@ -57,8 +39,15 @@ class TrackingParameterExtracter
     public function setup(array $extracters)
     {
         foreach ($extracters as $extracterName => $extracter) {
-            if (!$extracter instanceof TrackingParameterExtracterInterface) {
-                throw new InvalidConfigurationException(sprintf('Invalid tracking parameter extracter "%s".', $extracterName));
+            if (
+                (false === ($extracter instanceof TrackingParameterQueryExtracterInterface))
+                && (false === ($extracter instanceof TrackingParameterCookieExtracterInterface))
+                && (false === ($extracter instanceof TrackingParameterInitializerInterface))
+            ) {
+                throw new InvalidConfigurationException(sprintf(
+                    'Invalid tracking parameter extracter "%s".',
+                    $extracterName
+                ));
             }
         }
 
@@ -76,21 +65,25 @@ class TrackingParameterExtracter
     {
         $trackingParameters = new ParameterBag();
 
-        if (null !== $this->defaultCmp) {
-            $trackingParameters->set('cmp', $this->defaultCmp);
-        }
-
-        if (null !== $this->defaultExid) {
-            $trackingParameters->set('exid', $this->defaultExid);
-        }
-
-        if (null !== $this->defaultVisit) {
-            $trackingParameters->set('visit', $this->defaultVisit);
-        }
-
+        /** First search the query. */
         foreach ($this->extracters as $extracter) {
-            /** @param TrackingParameterExtracterInterface $extracter */
-            $trackingParameters->add($extracter->extract($request));
+            if ($extracter instanceof TrackingParameterQueryExtracterInterface) {
+                $trackingParameters->add($extracter->extractFromQuery($request->query));
+            }
+        }
+
+        /** The search the cookies. */
+        foreach ($this->extracters as $extracter) {
+            if ($extracter instanceof TrackingParameterCookieExtracterInterface) {
+                $trackingParameters->add($extracter->extractFromCookies($request->cookies));
+            }
+        }
+
+        /** Set default value if not found. */
+        foreach ($this->extracters as $extracter) {
+            if ($extracter instanceof TrackingParameterInitializerInterface) {
+                $trackingParameters->add($extracter->initialize());
+            }
         }
 
         return $trackingParameters;

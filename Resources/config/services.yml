@@ -26,16 +26,22 @@ services:
     # Extracter only.
     exs_tracking.cmp_manager:
         class: 'EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\CmpTrackingParameterManager'
+        arguments:
+            - '%exs_lander_tracking_house.default_cmp%'
         tags:
             - { name: 'exs_tracking.parameter_extracter' }
 
     exs_tracking.exid_manager:
         class: 'EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\ExidTrackingParameterManager'
+        arguments:
+            - '%exs_lander_tracking_house.default_exid%'
         tags:
             - { name: 'exs_tracking.parameter_extracter' }
 
     exs_tracking.visit_manager:
         class: 'EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\VisitTrackingParameterManager'
+        arguments:
+            - '%exs_lander_tracking_house.default_visit%'
         tags:
             - { name: 'exs_tracking.parameter_extracter' }
 

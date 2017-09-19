@@ -2,28 +2,65 @@
 
 namespace EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class VisitTrackingParameterManager
  *
  * @package EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager
  */
-class VisitTrackingParameterManager implements TrackingParameterExtracterInterface
+class VisitTrackingParameterManager implements TrackingParameterQueryExtracterInterface, TrackingParameterCookieExtracterInterface, TrackingParameterInitializerInterface
 {
+    /**
+     * @var string
+     */
+    private $defaultVisit;
+
+    /**
+     * ExidTrackingParameterManager constructor.
+     *
+     * @param $defaultVisit
+     */
+    public function __construct($defaultVisit)
+    {
+        $this->defaultVisit = $defaultVisit;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function extract(Request $request)
+    public function extractFromQuery(ParameterBag $query)
     {
         $trackingParameters = [];
 
-        if (null !== $visit = $request->query->get('visit')) {
+        if (null !== $visit = $query->get('visit')) {
             $trackingParameters['visit'] = $visit;
-        } elseif ($request->cookies->has('visit')) {
-            $trackingParameters['visit'] = $request->cookies->get('visit');
         }
 
         return $trackingParameters;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function extractFromCookies(ParameterBag $cookies)
+    {
+        $trackingParameters = [];
+
+        if (null !== $visit = $cookies->get('visit')) {
+            $trackingParameters['visit'] = $visit;
+        }
+
+        return $trackingParameters;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function initialize()
+    {
+        return [
+            'visit' => $this->defaultVisit,
+        ];
     }
 }

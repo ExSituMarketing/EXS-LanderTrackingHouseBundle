@@ -10,29 +10,23 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager
  */
-class UvTrackingParameterManager implements TrackingParameterExtracterInterface, TrackingParameterFormatterInterface
+class UvTrackingParameterManager implements TrackingParameterQueryExtracterInterface, TrackingParameterFormatterInterface
 {
     /**
      * uv: exid and visit with ~ as a delimiter
      *
      * {@inheritdoc}
      */
-    public function extract(Request $request)
+    public function extractFromQuery(ParameterBag $query)
     {
         $trackingParameters = [];
 
         if (
-            (null !== $uv = $request->query->get('uv'))
+            (null !== $uv = $query->get('uv'))
             && (preg_match('`^(?<exid>[a-z0-9]+)~(?<visit>[a-z0-9]+)$`i', $uv, $matches))
         ) {
             $trackingParameters['exid'] = $matches['exid'];
             $trackingParameters['visit'] = $matches['visit'];
-        } elseif (
-            $request->cookies->has('exid')
-            && $request->cookies->has('visit')
-        ) {
-            $trackingParameters['exid'] = $request->cookies->get('exid');
-            $trackingParameters['visit'] = $request->cookies->get('visit');
         }
 
         return $trackingParameters;
