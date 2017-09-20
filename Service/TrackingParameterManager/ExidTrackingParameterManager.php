@@ -49,8 +49,9 @@ class ExidTrackingParameterManager implements TrackingParameterQueryExtracterInt
     {
         $trackingParameters = [];
 
-        if (null !== $exid = $cookies->get('exid')) {
-            $trackingParameters['exid'] = $exid;
+        $foundParameter = array_intersect(['exid', 'u', 'uuid'], $cookies->keys());
+        if (count($foundParameter) >= 1) {
+            $trackingParameters['exid'] = $cookies->get(current($foundParameter));
         }
 
         return $trackingParameters;
