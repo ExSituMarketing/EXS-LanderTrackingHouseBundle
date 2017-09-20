@@ -8,45 +8,29 @@ use Symfony\Component\HttpFoundation\Request;
 
 class VisitTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testExtractWithoutParametersNorCookies()
+    public function testExtractWithParameters()
     {
-        $request = $this->prophesize(Request::class);
-
         $query = $this->prophesize(ParameterBag::class);
-        $query->get('visit')->willReturn(null)->shouldBeCalledTimes(1);
+        $query->get('visit')->willReturn(5)->shouldBeCalledTimes(1);
 
-        $request->query = $query;
+        $manager = new VisitTrackingParameterManager(1);
 
-        $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->has('visit')->willReturn(false)->shouldBeCalledTimes(1);
+        $result = $manager->extractFromQuery($query->reveal());
 
-        $request->cookies = $cookies;
+        $this->assertCount(1, $result);
 
-        $manager = new VisitTrackingParameterManager();
-
-        $result = $manager->extract($request->reveal());
-
-        $this->assertEmpty($result);
+        $this->assertArrayHasKey('visit', $result);
+        $this->assertEquals(5, $result['visit']);
     }
 
     public function testExtractWithoutParametersButCookies()
     {
-        $request = $this->prophesize(Request::class);
-
-        $query = $this->prophesize(ParameterBag::class);
-        $query->get('visit')->willReturn(null)->shouldBeCalledTimes(1);
-
-        $request->query = $query;
-
         $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->has('visit')->willReturn(true)->shouldBeCalledTimes(1);
         $cookies->get('visit')->willReturn(5)->shouldBeCalledTimes(1);
 
-        $request->cookies = $cookies;
+        $manager = new VisitTrackingParameterManager(1);
 
-        $manager = new VisitTrackingParameterManager();
-
-        $result = $manager->extract($request->reveal());
+        $result = $manager->extractFromCookies($cookies->reveal());
 
         $this->assertCount(1, $result);
 
@@ -54,22 +38,14 @@ class VisitTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(5, $result['visit']);
     }
 
-    public function testExtractWithParameters()
+    public function testInitialise()
     {
-        $request = $this->prophesize(Request::class);
+        $manager = new VisitTrackingParameterManager(1);
 
-        $query = $this->prophesize(ParameterBag::class);
-        $query->get('visit')->willReturn(5)->shouldBeCalledTimes(1);
-
-        $request->query = $query;
-
-        $manager = new VisitTrackingParameterManager();
-
-        $result = $manager->extract($request->reveal());
+        $result = $manager->initialize();
 
         $this->assertCount(1, $result);
-
         $this->assertArrayHasKey('visit', $result);
-        $this->assertEquals(5, $result['visit']);
+        $this->assertEquals(1, $result['visit']);
     }
 }

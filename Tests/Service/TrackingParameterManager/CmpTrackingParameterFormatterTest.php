@@ -4,72 +4,53 @@ namespace EXS\LanderTrackingHouseBundle\Tests\Service\TrackingParameterManager;
 
 use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\CmpTrackingParameterManager;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\HttpFoundation\Request;
 
 class CmpTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testExtractWithoutParametersNorCookies()
+    public function testExtractFromQuery()
     {
-        $request = $this->prophesize(Request::class);
-
         $query = $this->prophesize(ParameterBag::class);
-        $query->get('cmp')->willReturn(null)->shouldBeCalledTimes(1);
+        $query->get('cmp')->willReturn(null, 123)->shouldBeCalledTimes(2);
 
-        $request->query = $query;
+        $manager = new CmpTrackingParameterManager(1);
 
-        $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->has('cmp')->willReturn(false)->shouldBeCalledTimes(1);
-
-        $request->cookies = $cookies;
-
-        $manager = new CmpTrackingParameterManager();
-
-        $result = $manager->extract($request->reveal());
+        $result = $manager->extractFromQuery($query->reveal());
 
         $this->assertEmpty($result);
+
+        $result = $manager->extractFromQuery($query->reveal());
+
+        $this->assertCount(1, $result);
+        $this->assertArrayHasKey('cmp', $result);
+        $this->assertEquals(123, $result['cmp']);
     }
 
-    public function testExtractWithoutParametersButCookies()
+    public function testExtractFromCookies()
     {
-        $request = $this->prophesize(Request::class);
-
-        $query = $this->prophesize(ParameterBag::class);
-        $query->get('cmp')->willReturn(null)->shouldBeCalledTimes(1);
-
-        $request->query = $query;
-
         $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->has('cmp')->willReturn(true)->shouldBeCalledTimes(1);
-        $cookies->get('cmp')->willReturn(123)->shouldBeCalledTimes(1);
+        $cookies->get('cmp')->willReturn(null, 123)->shouldBeCalledTimes(2);
 
-        $request->cookies = $cookies;
+        $manager = new CmpTrackingParameterManager(1);
 
-        $manager = new CmpTrackingParameterManager();
+        $result = $manager->extractFromCookies($cookies->reveal());
 
-        $result = $manager->extract($request->reveal());
+        $this->assertEmpty($result);
+
+        $result = $manager->extractFromCookies($cookies->reveal());
 
         $this->assertCount(1, $result);
-
         $this->assertArrayHasKey('cmp', $result);
         $this->assertEquals(123, $result['cmp']);
     }
 
-    public function testExtractWithParameters()
+    public function testInitialize()
     {
-        $request = $this->prophesize(Request::class);
+        $manager = new CmpTrackingParameterManager(1);
 
-        $query = $this->prophesize(ParameterBag::class);
-        $query->get('cmp')->willReturn(123)->shouldBeCalledTimes(1);
-
-        $request->query = $query;
-
-        $manager = new CmpTrackingParameterManager();
-
-        $result = $manager->extract($request->reveal());
+        $result = $manager->initialize();
 
         $this->assertCount(1, $result);
-
         $this->assertArrayHasKey('cmp', $result);
-        $this->assertEquals(123, $result['cmp']);
+        $this->assertEquals(1, $result['cmp']);
     }
 }

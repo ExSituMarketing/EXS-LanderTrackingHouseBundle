@@ -4,73 +4,17 @@ namespace EXS\LanderTrackingChaturbateBundle\Tests\Service\TrackingParameterMana
 
 use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\UvTrackingParameterManager;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\HttpFoundation\Request;
 
 class UvTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testExtractWithoutParametersNorCookies()
+    public function testExtractFromQuery()
     {
-        $request = $this->prophesize(Request::class);
-
-        $query = $this->prophesize(ParameterBag::class);
-        $query->get('uv')->willReturn(null)->shouldBeCalledTimes(1);
-
-        $request->query = $query;
-
-        $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->has('exid')->willReturn(false)->shouldBeCalledTimes(1);
-
-        $request->cookies = $cookies;
-
-        $manager = new UvTrackingParameterManager();
-
-        $result = $manager->extract($request->reveal());
-
-        $this->assertEmpty($result);
-    }
-
-    public function testExtractWithoutParametersButCookies()
-    {
-        $request = $this->prophesize(Request::class);
-
-        $query = $this->prophesize(ParameterBag::class);
-        $query->get('uv')->willReturn(null)->shouldBeCalledTimes(1);
-
-        $request->query = $query;
-
-        $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->has('exid')->willReturn(true)->shouldBeCalledTimes(1);
-        $cookies->has('visit')->willReturn(true)->shouldBeCalledTimes(1);
-        $cookies->get('exid')->willReturn('UUID987654321')->shouldBeCalledTimes(1);
-        $cookies->get('visit')->willReturn('5')->shouldBeCalledTimes(1);
-
-        $request->cookies = $cookies;
-
-        $manager = new UvTrackingParameterManager();
-
-        $result = $manager->extract($request->reveal());
-
-        $this->assertCount(2, $result);
-
-        $this->assertArrayHasKey('exid', $result);
-        $this->assertEquals('UUID987654321', $result['exid']);
-
-        $this->assertArrayHasKey('visit', $result);
-        $this->assertEquals('5', $result['visit']);
-    }
-
-    public function testExtractWithParameters()
-    {
-        $request = $this->prophesize(Request::class);
-
         $query = $this->prophesize(ParameterBag::class);
         $query->get('uv')->willReturn('UUID987654321~5')->shouldBeCalledTimes(1);
 
-        $request->query = $query;
-
         $manager = new UvTrackingParameterManager();
 
-        $result = $manager->extract($request->reveal());
+        $result = $manager->extractFromQuery($query->reveal());
 
         $this->assertCount(2, $result);
 
@@ -80,7 +24,6 @@ class UvTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('visit', $result);
         $this->assertEquals(5, $result['visit']);
     }
-
 
     public function testFormatWithEmptyArray()
     {
