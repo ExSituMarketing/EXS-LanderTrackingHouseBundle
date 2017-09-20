@@ -3,7 +3,6 @@
 namespace EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class CuvpTrackingParameterManager
