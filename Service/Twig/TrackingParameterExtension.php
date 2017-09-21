@@ -24,7 +24,7 @@ class TrackingParameterExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_Function('getTracking', [$this, 'getTracking']),
+            new \Twig_SimpleFunction('getTracking', [$this, 'getTracking']),
         ];
     }
 
@@ -34,7 +34,7 @@ class TrackingParameterExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_Filter('appendTracking', [$this, 'appendTracking']),
+            new \Twig_SimpleFilter('appendTracking', [$this, 'appendTracking']),
         ];
     }
 
