@@ -4,6 +4,7 @@ namespace EXS\LanderTrackingHouseBundle\Service;
 
 use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\TrackingParameterFormatterInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class TrackingParameterAppender
@@ -23,6 +24,11 @@ class TrackingParameterAppender
     private $formatters;
 
     /**
+     * @var ParameterBag
+     */
+    private $allTrackingParameters;
+
+    /**
      * TrackingParameterAppender constructor.
      *
      * @param TrackingParameterPersister $persister
@@ -31,6 +37,7 @@ class TrackingParameterAppender
     {
         $this->persister = $persister;
         $this->formatters = [];
+        $this->allTrackingParameters = new ParameterBag();
     }
 
     /**
@@ -89,29 +96,24 @@ class TrackingParameterAppender
 
         $trackingParameters = $this->persister->getTrackingParameters();
 
-        if (null === $formatterName) {
-            /** Search for tracking parameters to replace in query's parameters. */
-            foreach ($parameters as $parameterName => $parameterValue) {
-                if (preg_match('`^{\s?(?<parameter>[a-z0-9_]+)\s?}$`i', $parameterValue, $matches)) {
-                    $parameters[$parameterName] = $trackingParameters->get($matches['parameter'], null);
-                }
-            }
-        } else {
-            /** Call formatter to get parameters to add to the query's parameters. */
-            $foundFilters = array_filter(array_keys($this->formatters), function ($formatterId) use ($formatterName) {
-                $pattern = sprintf('`^(?:(?:.*)\.)?%s(?:_(?:.*))?$`i', $formatterName);
+        if (null !== $formatterName) {
+            $foundFormatter = $this->findFormatterByName($formatterName);
 
-                return (0 !== (int)preg_match($pattern, $formatterId));
-            });
-
-            if (empty($foundFilters)) {
+            if (null === $foundFormatter) {
                 throw new InvalidConfigurationException(sprintf('Unknown formatter "%s".', $formatterName));
             }
 
             $parameters = array_merge(
                 $parameters,
-                $this->formatters[current($foundFilters)]->format($trackingParameters)
+                $this->formatters[$foundFormatter]->format($trackingParameters)
             );
+        }
+
+        /** Search for tracking parameters to replace in query's parameters. */
+        foreach ($parameters as $parameterName => $parameterValue) {
+            if (preg_match('`^{\s?(?<parameter>[a-z0-9_]+)\s?}$`i', $parameterValue, $matches)) {
+                $parameters[$parameterName] = $trackingParameters->get($matches['parameter'], null);
+            }
         }
 
         /** Rebuild the query parameters string. */
@@ -122,5 +124,57 @@ class TrackingParameterAppender
         }
 
         return $this->buildUrl($urlComponents);
+    }
+
+    /**
+     * @param string $parameterName
+     *
+     * @return string|null
+     */
+    public function getTrackingParameter($parameterName)
+    {
+        $trackingParameters = $this->persister->getTrackingParameters();
+
+        if (null !== $parameterValue = $trackingParameters->get($parameterName)) {
+            return $parameterValue;
+        }
+
+        if (0 === $this->allTrackingParameters->count()) {
+            $this->allTrackingParameters = clone $trackingParameters;
+
+            foreach ($this->formatters as $formatter) {
+                $newParameters = $formatter->format($trackingParameters);
+
+                foreach ($newParameters as $newParameterName => $newParameterValue) {
+                    $this->allTrackingParameters->set($newParameterName, $newParameterValue);
+                }
+            }
+        }
+
+        if (null !== $parameterValue = $this->allTrackingParameters->get($parameterName)) {
+            return $parameterValue;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $formatterName
+     *
+     * @return mixed|null
+     */
+    private function findFormatterByName($formatterName)
+    {
+        $foundFormatters = array_filter(array_keys($this->formatters), function ($formatterIdentifier) use ($formatterName) {
+            $pattern = sprintf('`^(?:(?:.*)\.)?%s(?:_(?:.*))?$`i', $formatterName);
+
+            return (0 !== (int)preg_match($pattern, $formatterIdentifier));
+        });
+
+        if (empty($foundFormatters)) {
+            return null;
+        }
+
+        return current($foundFormatters);
     }
 }

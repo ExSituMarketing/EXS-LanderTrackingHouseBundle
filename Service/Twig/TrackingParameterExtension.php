@@ -21,13 +21,20 @@ class TrackingParameterExtension extends \Twig_Extension
         $this->appender = $appender;
     }
 
+    public function getFunctions()
+    {
+        return [
+            new \Twig_Function('getTracking', [$this, 'getTracking']),
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('appendTracking', [$this, 'appendTracking']),
+            new \Twig_Filter('appendTracking', [$this, 'appendTracking']),
         ];
     }
 
@@ -40,5 +47,15 @@ class TrackingParameterExtension extends \Twig_Extension
     public function appendTracking($url, $formatterName = null)
     {
         return $this->appender->append($url, $formatterName);
+    }
+
+    /**
+     * @param string $parameterName
+     *
+     * @return string
+     */
+    public function getTracking($parameterName)
+    {
+        return $this->appender->getTrackingParameter($parameterName);
     }
 }

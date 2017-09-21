@@ -48,11 +48,11 @@ exs_lander_tracking_house:
 
 ## Usage
 
-Use the `appendTracking` Twig filter on any url.
+### Use the `appendTracking` Twig filter on any url.
 
 If the user have got the required tracking parameters, the tracking parameters will be added.
 
-### Use a specific formatter
+#### Use a specific formatter
 
 ```twig
 <a href="{{ 'https://www.foo.tld/bar' | appendTracking('foo') }}" target="_blank">Some link</a>
@@ -60,12 +60,18 @@ If the user have got the required tracking parameters, the tracking parameters w
 <a href="{{ url('homepage') | appendTracking('foo') }}" target="_blank">Some link</a>
 ```
 
-### Replace placeholders
+#### Replace placeholders
 
 ```twig
 <a href="{{ url('homepage', {'cmp': '{cmp}', 'exid': '{exid}'}) | appendTracking }}" target="_blank">Some link</a>
 
 <a href="{{ 'https://www.foo.tld/bar?cmp={cmp}&exid={exid}&visit={visit}' | appendTracking }}" target="_blank">Some link</a>
+```
+
+### Use `getTracking('parameterName')` Twig function to get any tracking parameter.
+
+```twig
+    <input type="hidden" name="foo" value="{{ getTracking('foo') }}">
 ```
 
 ## Builtin extractor

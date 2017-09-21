@@ -118,4 +118,53 @@ class TrackingParameterAppenderTest extends \PHPUnit_Framework_TestCase
 
         $appender->append('https://www.test.tld/foo?bar=baz', 'another');
     }
+
+    public function testGetTrackingParameterWithAValidParametername()
+    {
+        $persister = $this->prophesize(TrackingParameterPersister::class);
+        $persister->getTrackingParameters()->willReturn(
+            new ParameterBag(['foo' => 123])
+        )->shouldBeCalledTimes(1);
+
+        $appender = new TrackingParameterAppender($persister->reveal());
+
+        $result = $appender->getTrackingParameter('foo');
+
+        $this->assertEquals(123, $result);
+    }
+
+    public function testGetTrackingParameterWithAParameternameFromAformatter()
+    {
+        $persister = $this->prophesize(TrackingParameterPersister::class);
+        $persister->getTrackingParameters()->willReturn(new ParameterBag(['foo' => 123]))->shouldBeCalledTimes(1);
+
+        $appender = new TrackingParameterAppender($persister->reveal());
+
+        $reflector = new \ReflectionObject($appender);
+
+        $barFormatter = $this->prophesize(TrackingParameterFormatterInterface::class);
+        $barFormatter->format(new ParameterBag(['foo' => 123]))->willReturn(['bar' => 456])->shouldBeCalledTimes(1);
+
+        $trackingParameters = $reflector->getProperty('formatters');
+        $trackingParameters->setAccessible(true);
+        $trackingParameters->setValue($appender, [
+            'some_formatter' => $barFormatter->reveal(),
+        ]);
+
+        $result = $appender->getTrackingParameter('bar');
+
+        $this->assertEquals(456, $result);
+    }
+
+    public function testGetTrackingParameterWithUnknownParameterName()
+    {
+        $persister = $this->prophesize(TrackingParameterPersister::class);
+        $persister->getTrackingParameters()->willReturn(new ParameterBag(['foo' => 123]))->shouldBeCalledTimes(1);
+
+        $appender = new TrackingParameterAppender($persister->reveal());
+
+        $result = $appender->getTrackingParameter('baz');
+
+        $this->assertNull($result);
+    }
 }
