@@ -70,6 +70,9 @@ class TrackingParameterSubscriber implements EventSubscriberInterface
     public function extractTrackingParameters(GetResponseEvent $event)
     {
         if (true === $event->isMasterRequest()) {
+            $defaultTrackingParameters = $this->extracter->getDefaultValues();
+            $this->persister->setDefaultTrackingParameters($defaultTrackingParameters);
+
             $trackingParameters = $this->extracter->extract($event->getRequest());
             $this->persister->setTrackingParameters($trackingParameters);
         }

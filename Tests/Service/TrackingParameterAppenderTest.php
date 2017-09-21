@@ -78,7 +78,7 @@ class TrackingParameterAppenderTest extends \PHPUnit_Framework_TestCase
     public function testAppend()
     {
         $persister = $this->prophesize(TrackingParameterPersister::class);
-        $persister->getTrackingParameters()->willReturn(
+        $persister->getAllTrackingParameters()->willReturn(
             new ParameterBag(['cmp' => 123]),
             new ParameterBag(['cmp' => 123]),
             new ParameterBag(['cmp' => 123]),
@@ -122,7 +122,7 @@ class TrackingParameterAppenderTest extends \PHPUnit_Framework_TestCase
     public function testGetTrackingParameterWithAValidParametername()
     {
         $persister = $this->prophesize(TrackingParameterPersister::class);
-        $persister->getTrackingParameters()->willReturn(
+        $persister->getAllTrackingParameters()->willReturn(
             new ParameterBag(['foo' => 123])
         )->shouldBeCalledTimes(1);
 
@@ -136,7 +136,7 @@ class TrackingParameterAppenderTest extends \PHPUnit_Framework_TestCase
     public function testGetTrackingParameterWithAParameternameFromAformatter()
     {
         $persister = $this->prophesize(TrackingParameterPersister::class);
-        $persister->getTrackingParameters()->willReturn(new ParameterBag(['foo' => 123]))->shouldBeCalledTimes(1);
+        $persister->getAllTrackingParameters()->willReturn(new ParameterBag(['foo' => 123]))->shouldBeCalledTimes(1);
 
         $appender = new TrackingParameterAppender($persister->reveal());
 
@@ -159,7 +159,7 @@ class TrackingParameterAppenderTest extends \PHPUnit_Framework_TestCase
     public function testGetTrackingParameterWithUnknownParameterName()
     {
         $persister = $this->prophesize(TrackingParameterPersister::class);
-        $persister->getTrackingParameters()->willReturn(new ParameterBag(['foo' => 123]))->shouldBeCalledTimes(1);
+        $persister->getAllTrackingParameters()->willReturn(new ParameterBag(['foo' => 123]))->shouldBeCalledTimes(1);
 
         $appender = new TrackingParameterAppender($persister->reveal());
 

@@ -16,6 +16,11 @@ class TrackingParameterPersister
     /**
      * @var ParameterBag
      */
+    private $defaultTrackingParameters;
+
+    /**
+     * @var ParameterBag
+     */
     private $trackingParameters;
 
     /**
@@ -23,7 +28,38 @@ class TrackingParameterPersister
      */
     public function __construct()
     {
+        $this->defaultTrackingParameters = new ParameterBag();
         $this->trackingParameters = new ParameterBag();
+    }
+
+    /**
+     * Merge
+     *
+     * @return ParameterBag
+     */
+    public function getAllTrackingParameters()
+    {
+        $trackingParameters = clone $this->defaultTrackingParameters;
+
+        $trackingParameters->add($this->trackingParameters->all());
+
+        return $trackingParameters;
+    }
+
+    /**
+     * @return ParameterBag
+     */
+    public function getDefaultTrackingParameters()
+    {
+        return $this->defaultTrackingParameters;
+    }
+
+    /**
+     * @param ParameterBag $defaultTrackingParameters
+     */
+    public function setDefaultTrackingParameters(ParameterBag $defaultTrackingParameters)
+    {
+        $this->defaultTrackingParameters = $defaultTrackingParameters;
     }
 
     /**
@@ -52,6 +88,7 @@ class TrackingParameterPersister
     public function persist(Response $response)
     {
         $trackingParameters = $this->trackingParameters->all();
+
         foreach ($trackingParameters as $trackingParameter => $value) {
             $response->headers->setCookie(new Cookie($trackingParameter, $value));
         }

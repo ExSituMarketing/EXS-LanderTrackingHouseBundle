@@ -94,7 +94,7 @@ class TrackingParameterAppender
             parse_str($urlComponents['query'], $parameters);
         }
 
-        $trackingParameters = $this->persister->getTrackingParameters();
+        $trackingParameters = $this->persister->getAllTrackingParameters();
 
         if (null !== $formatterName) {
             $foundFormatter = $this->findFormatterByName($formatterName);
@@ -133,7 +133,7 @@ class TrackingParameterAppender
      */
     public function getTrackingParameter($parameterName)
     {
-        $trackingParameters = $this->persister->getTrackingParameters();
+        $trackingParameters = $this->persister->getAllTrackingParameters();
 
         if (null !== $parameterValue = $trackingParameters->get($parameterName)) {
             return $parameterValue;

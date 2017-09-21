@@ -10,6 +10,68 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class TrackingParameterPersisterTest extends \PHPUnit_Framework_TestCase
 {
+    public function testGetAllTrackingParameters()
+    {
+        $persister = new TrackingParameterPersister();
+
+        $reflector = new \ReflectionObject($persister);
+
+        $trackingParameters = $reflector->getProperty('defaultTrackingParameters');
+        $trackingParameters->setAccessible(true);
+        $trackingParameters->setValue($persister, new ParameterBag([
+            'cmp' => 123,
+            'exid' => 'defaultExid',
+        ]));
+
+        $trackingParameters = $reflector->getProperty('trackingParameters');
+        $trackingParameters->setAccessible(true);
+        $trackingParameters->setValue($persister, new ParameterBag([
+            'exid' => 'UUID0123456789',
+            'visit' => 5,
+        ]));
+
+        $result = $persister->getAllTrackingParameters();
+
+        $this->assertInstanceOf(ParameterBag::class, $result);
+        $this->assertEquals(123, $result->get('cmp'));
+        $this->assertEquals('UUID0123456789', $result->get('exid'));
+        $this->assertEquals(5, $result->get('visit'));
+    }
+
+    public function testGetDefaultTrackingParameters()
+    {
+        $persister = new TrackingParameterPersister();
+
+        $reflector = new \ReflectionObject($persister);
+        $trackingParameters = $reflector->getProperty('defaultTrackingParameters');
+        $trackingParameters->setAccessible(true);
+        $trackingParameters->setValue($persister, new ParameterBag([
+            'cmp' => 123,
+            'exid' => 'UUID0123456789',
+        ]));
+
+        $result = $persister->getDefaultTrackingParameters();
+
+        $this->assertInstanceOf(ParameterBag::class, $result);
+        $this->assertEquals(123, $result->get('cmp'));
+        $this->assertEquals('UUID0123456789', $result->get('exid'));
+    }
+
+    public function testSetDefaultTrackingParameters()
+    {
+        $trackingParameters = new ParameterBag([
+            'cmp' => 123,
+            'exid' => 'UUID0123456789',
+        ]);
+
+        $persister = new TrackingParameterPersister();
+        $persister->setDefaultTrackingParameters($trackingParameters);
+
+        $this->assertAttributeCount(2, 'defaultTrackingParameters', $persister);
+        $this->assertAttributeInstanceOf(ParameterBag::class, 'defaultTrackingParameters', $persister);
+        $this->assertAttributeEquals($trackingParameters, 'defaultTrackingParameters', $persister);
+    }
+
     public function testGetTrackingParameters()
     {
         $persister = new TrackingParameterPersister();

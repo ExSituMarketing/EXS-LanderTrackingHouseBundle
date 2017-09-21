@@ -65,14 +65,7 @@ class TrackingParameterExtracter
     {
         $trackingParameters = new ParameterBag();
 
-        /** Set default values. */
-        foreach ($this->extracters as $extracter) {
-            if ($extracter instanceof TrackingParameterInitializerInterface) {
-                $trackingParameters->add($extracter->initialize());
-            }
-        }
-
-        /** Override default value by cookies' value if set. */
+        /** Get value from cookies. */
         foreach ($this->extracters as $extracter) {
             if ($extracter instanceof TrackingParameterCookieExtracterInterface) {
                 $trackingParameters->add($extracter->extractFromCookies($request->cookies));
@@ -83,6 +76,22 @@ class TrackingParameterExtracter
         foreach ($this->extracters as $extracter) {
             if ($extracter instanceof TrackingParameterQueryExtracterInterface) {
                 $trackingParameters->add($extracter->extractFromQuery($request->query));
+            }
+        }
+
+        return $trackingParameters;
+    }
+
+    /**
+     * @return ParameterBag
+     */
+    public function getDefaultValues()
+    {
+        $trackingParameters = new ParameterBag();
+
+        foreach ($this->extracters as $extracter) {
+            if ($extracter instanceof TrackingParameterInitializerInterface) {
+                $trackingParameters->add($extracter->initialize());
             }
         }
 
