@@ -18,14 +18,14 @@ class CupTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(3, $result);
 
-        $this->assertArrayHasKey('cmp', $result);
-        $this->assertEquals(123, $result['cmp']);
+        $this->assertArrayHasKey('c', $result);
+        $this->assertEquals(123, $result['c']);
 
         $this->assertArrayHasKey('u', $result);
         $this->assertEquals('UUID987654321', $result['u']);
 
-        $this->assertArrayHasKey('product_id', $result);
-        $this->assertEquals(5, $result['product_id']);
+        $this->assertArrayHasKey('p', $result);
+        $this->assertEquals(5, $result['p']);
     }
 
     public function testFormatWithEmptyArray()
@@ -44,9 +44,9 @@ class CupTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithAllParameters()
     {
         $trackingParameters = new ParameterBag([
-            'cmp' => 123,
+            'c' => 123,
             'u' => 'UUID987654321',
-            'product_id' => 5,
+            'p' => 5,
         ]);
 
         $formatter = new CupTrackingParameterManager();

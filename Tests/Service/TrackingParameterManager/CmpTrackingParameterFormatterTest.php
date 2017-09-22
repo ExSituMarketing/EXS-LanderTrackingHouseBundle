@@ -10,7 +10,7 @@ class CmpTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCase
     public function testExtractFromQuery()
     {
         $query = $this->prophesize(ParameterBag::class);
-        $query->get('cmp')->willReturn(null, 123)->shouldBeCalledTimes(2);
+        $query->get('c')->willReturn(null, 123)->shouldBeCalledTimes(2);
 
         $manager = new CmpTrackingParameterManager(1);
 
@@ -21,14 +21,14 @@ class CmpTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCase
         $result = $manager->extractFromQuery($query->reveal());
 
         $this->assertCount(1, $result);
-        $this->assertArrayHasKey('cmp', $result);
-        $this->assertEquals(123, $result['cmp']);
+        $this->assertArrayHasKey('c', $result);
+        $this->assertEquals(123, $result['c']);
     }
 
     public function testExtractFromCookies()
     {
         $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->get('cmp')->willReturn(null, 123)->shouldBeCalledTimes(2);
+        $cookies->get('c')->willReturn(null, 123)->shouldBeCalledTimes(2);
 
         $manager = new CmpTrackingParameterManager(1);
 
@@ -39,8 +39,8 @@ class CmpTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCase
         $result = $manager->extractFromCookies($cookies->reveal());
 
         $this->assertCount(1, $result);
-        $this->assertArrayHasKey('cmp', $result);
-        $this->assertEquals(123, $result['cmp']);
+        $this->assertArrayHasKey('c', $result);
+        $this->assertEquals(123, $result['c']);
     }
 
     public function testInitialize()
@@ -50,7 +50,7 @@ class CmpTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCase
         $result = $manager->initialize();
 
         $this->assertCount(1, $result);
-        $this->assertArrayHasKey('cmp', $result);
-        $this->assertEquals(1, $result['cmp']);
+        $this->assertArrayHasKey('c', $result);
+        $this->assertEquals(1, $result['c']);
     }
 }

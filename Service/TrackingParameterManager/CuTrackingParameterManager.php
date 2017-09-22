@@ -22,9 +22,9 @@ class CuTrackingParameterManager implements TrackingParameterQueryExtracterInter
 
         if (
             (null !== $cu = $query->get('cu'))
-            && (preg_match('`^(?<cmp>[a-z0-9]+)~(?<u>[a-z0-9]+)$`i', $cu, $matches))
+            && (preg_match('`^(?<c>[a-z0-9]+)~(?<u>[a-z0-9]+)$`i', $cu, $matches))
         ) {
-            $trackingParameters['cmp'] = $matches['cmp'];
+            $trackingParameters['c'] = $matches['c'];
             $trackingParameters['u'] = $matches['u'];
         }
 
@@ -41,12 +41,12 @@ class CuTrackingParameterManager implements TrackingParameterQueryExtracterInter
         $cu = null;
 
         if (
-            $trackingParameters->has('cmp')
+            $trackingParameters->has('c')
             && $trackingParameters->has('u')
         ) {
             $cu = sprintf(
                 '%s~%s',
-                $trackingParameters->get('cmp'),
+                $trackingParameters->get('c'),
                 $trackingParameters->get('u')
             );
         }

@@ -60,7 +60,7 @@ class TrackingParameterExtracterTest extends \PHPUnit_Framework_TestCase
 
         $cmpManager = $this->prophesize(CmpTrackingParameterManager::class);
         $cmpManager->extractFromCookies($revealedRequest->cookies)->willReturn([])->shouldBeCalledTimes(1);
-        $cmpManager->extractFromQuery($revealedRequest->query)->willReturn(['cmp' => 123])->shouldBeCalledTimes(1);
+        $cmpManager->extractFromQuery($revealedRequest->query)->willReturn(['c' => 123])->shouldBeCalledTimes(1);
 
         $extracter = new TrackingParameterExtracter();
 
@@ -75,13 +75,13 @@ class TrackingParameterExtracterTest extends \PHPUnit_Framework_TestCase
         $result = $extracter->extract($revealedRequest);
 
         $this->assertInstanceOf(ParameterBag::class, $result);
-        $this->assertEquals(123, $result->get('cmp'));
+        $this->assertEquals(123, $result->get('c'));
     }
 
     public function testGetDefaultValues()
     {
         $cmpManager = $this->prophesize(CmpTrackingParameterManager::class);
-        $cmpManager->initialize()->willReturn(['cmp' => 1])->shouldBeCalledTimes(1);
+        $cmpManager->initialize()->willReturn(['c' => 1])->shouldBeCalledTimes(1);
 
         $extracter = new TrackingParameterExtracter();
 
@@ -96,6 +96,6 @@ class TrackingParameterExtracterTest extends \PHPUnit_Framework_TestCase
         $result = $extracter->getDefaultValues();
 
         $this->assertInstanceOf(ParameterBag::class, $result);
-        $this->assertEquals(1, $result->get('cmp'));
+        $this->assertEquals(1, $result->get('c'));
     }
 }

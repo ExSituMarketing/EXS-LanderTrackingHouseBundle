@@ -21,11 +21,11 @@ class UvpTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('u', $result);
         $this->assertEquals('UUID987654321', $result['u']);
 
-        $this->assertArrayHasKey('visit', $result);
-        $this->assertEquals(5, $result['visit']);
+        $this->assertArrayHasKey('v', $result);
+        $this->assertEquals(5, $result['v']);
 
-        $this->assertArrayHasKey('product_id', $result);
-        $this->assertEquals('5', $result['product_id']);
+        $this->assertArrayHasKey('p', $result);
+        $this->assertEquals('5', $result['p']);
     }
 
     public function testFormatWithEmptyArray()
@@ -45,8 +45,8 @@ class UvpTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
     {
         $trackingParameters = new ParameterBag([
             'u' => 'UUID987654321',
-            'visit' => 5,
-            'product_id' => 5,
+            'v' => 5,
+            'p' => 5,
         ]);
 
         $formatter = new UvpTrackingParameterManager();

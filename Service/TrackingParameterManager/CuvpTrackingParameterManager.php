@@ -22,12 +22,12 @@ class CuvpTrackingParameterManager implements TrackingParameterQueryExtracterInt
 
         if (
             (null !== $cuvp = $query->get('cuvp'))
-            && (preg_match('`^(?<cmp>[a-z0-9]+)~(?<u>[a-z0-9]+)~(?<visit>[a-z0-9]+)~(?<product_id>[a-z0-9]+)$`i', $cuvp, $matches))
+            && (preg_match('`^(?<c>[a-z0-9]+)~(?<u>[a-z0-9]+)~(?<v>[a-z0-9]+)~(?<p>[a-z0-9]+)$`i', $cuvp, $matches))
         ) {
-            $trackingParameters['cmp'] = $matches['cmp'];
+            $trackingParameters['c'] = $matches['c'];
             $trackingParameters['u'] = $matches['u'];
-            $trackingParameters['visit'] = $matches['visit'];
-            $trackingParameters['product_id'] = $matches['product_id'];
+            $trackingParameters['v'] = $matches['v'];
+            $trackingParameters['p'] = $matches['p'];
         }
 
         return $trackingParameters;
@@ -43,17 +43,17 @@ class CuvpTrackingParameterManager implements TrackingParameterQueryExtracterInt
         $cuvp = null;
 
         if (
-            $trackingParameters->has('cmp')
+            $trackingParameters->has('c')
             && $trackingParameters->has('u')
-            && $trackingParameters->has('visit')
-            && $trackingParameters->has('product_id')
+            && $trackingParameters->has('v')
+            && $trackingParameters->has('p')
         ) {
             $cuvp = sprintf(
                 '%s~%s~%s~%s',
-                $trackingParameters->get('cmp'),
+                $trackingParameters->get('c'),
                 $trackingParameters->get('u'),
-                $trackingParameters->get('visit'),
-                $trackingParameters->get('product_id')
+                $trackingParameters->get('v'),
+                $trackingParameters->get('p')
             );
         }
 

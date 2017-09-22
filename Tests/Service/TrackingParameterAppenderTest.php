@@ -79,9 +79,9 @@ class TrackingParameterAppenderTest extends \PHPUnit_Framework_TestCase
     {
         $persister = $this->prophesize(TrackingParameterPersister::class);
         $persister->getAllTrackingParameters()->willReturn(
-            new ParameterBag(['cmp' => 123]),
-            new ParameterBag(['cmp' => 123]),
-            new ParameterBag(['cmp' => 123]),
+            new ParameterBag(['c' => 123]),
+            new ParameterBag(['c' => 123]),
+            new ParameterBag(['c' => 123]),
             new ParameterBag(),
             new ParameterBag()
         )->shouldBeCalledTimes(5);
@@ -92,7 +92,7 @@ class TrackingParameterAppenderTest extends \PHPUnit_Framework_TestCase
 
         $someFormatter = $this->prophesize(TrackingParameterFormatterInterface::class);
         $someFormatter->format(new ParameterBag([
-            'cmp' => 123,
+            'c' => 123,
         ]))->willReturn(['some' => 123])->shouldBeCalledTimes(1);
         $someFormatter->format(new ParameterBag())->willReturn([])->shouldBeCalledTimes(1);
 
@@ -105,7 +105,7 @@ class TrackingParameterAppenderTest extends \PHPUnit_Framework_TestCase
         $result = $appender->append('https://www.test.tld/foo');
         $this->assertEquals('https://www.test.tld/foo', $result);
 
-        $result = $appender->append('https://www.test.tld/foo?cmp={cmp}&bar=baz');
+        $result = $appender->append('https://www.test.tld/foo?cmp={c}&bar=baz');
         $this->assertEquals('https://www.test.tld/foo?cmp=123&bar=baz', $result);
 
         $result = $appender->append('https://www.test.tld/foo?bar=baz', 'some');

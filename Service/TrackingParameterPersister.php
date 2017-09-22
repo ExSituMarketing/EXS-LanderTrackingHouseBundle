@@ -14,6 +14,11 @@ use Symfony\Component\HttpFoundation\Response;
 class TrackingParameterPersister
 {
     /**
+     * @var array
+     */
+    private $cookiesToSave;
+
+    /**
      * @var ParameterBag
      */
     private $defaultTrackingParameters;
@@ -25,9 +30,12 @@ class TrackingParameterPersister
 
     /**
      * TrackingParameterPersister constructor.
+     *
+     * @param array $cookiesToSave
      */
-    public function __construct()
+    public function __construct(array $cookiesToSave = ['c', 'v'])
     {
+        $this->cookiesToSave = $cookiesToSave;
         $this->defaultTrackingParameters = new ParameterBag();
         $this->trackingParameters = new ParameterBag();
     }
@@ -90,15 +98,20 @@ class TrackingParameterPersister
         $trackingParameters = $this->trackingParameters->all();
 
         foreach ($trackingParameters as $trackingParameter => $value) {
-            $response->headers->setCookie(new Cookie(
-                $trackingParameter,
-                $value,
-                new \DateTime('+1 year'),
-                '/',
-                null,
-                false,
-                false
-            ));
+            if (
+                (null !== $value)
+                && (true === in_array($trackingParameter, $this->cookiesToSave))
+            ) {
+                $response->headers->setCookie(new Cookie(
+                    $trackingParameter,
+                    $value,
+                    new \DateTime('+1 year'),
+                    '/',
+                    null,
+                    false,
+                    false
+                ));
+            }
         }
 
         return $response;

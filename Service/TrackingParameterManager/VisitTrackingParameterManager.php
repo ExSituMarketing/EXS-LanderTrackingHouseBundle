@@ -33,8 +33,8 @@ class VisitTrackingParameterManager implements TrackingParameterQueryExtracterIn
     {
         $trackingParameters = [];
 
-        if (null !== $visit = $query->get('visit')) {
-            $trackingParameters['visit'] = $visit;
+        if (null !== $visit = $query->get('v')) {
+            $trackingParameters['v'] = $visit;
         }
 
         return $trackingParameters;
@@ -47,8 +47,8 @@ class VisitTrackingParameterManager implements TrackingParameterQueryExtracterIn
     {
         $trackingParameters = [];
 
-        if (null !== $visit = $cookies->get('visit')) {
-            $trackingParameters['visit'] = $visit;
+        if (null !== $visit = $cookies->get('v')) {
+            $trackingParameters['v'] = $visit;
         }
 
         return $trackingParameters;
@@ -60,7 +60,7 @@ class VisitTrackingParameterManager implements TrackingParameterQueryExtracterIn
     public function initialize()
     {
         return [
-            'visit' => $this->defaultVisit,
+            'v' => $this->defaultVisit,
         ];
     }
 }

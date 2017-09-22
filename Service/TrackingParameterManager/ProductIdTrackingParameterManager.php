@@ -19,7 +19,7 @@ class ProductIdTrackingParameterManager implements TrackingParameterQueryExtract
         $trackingParameters = [];
 
         if (null !== $productId = $query->get('p')) {
-            $trackingParameters['product_id'] = $productId;
+            $trackingParameters['p'] = $productId;
         }
 
         return $trackingParameters;
@@ -32,8 +32,8 @@ class ProductIdTrackingParameterManager implements TrackingParameterQueryExtract
     {
         $trackingParameters = [];
 
-        if (null !== $productId = $cookies->get('product_id')) {
-            $trackingParameters['product_id'] = $productId;
+        if (null !== $productId = $cookies->get('p')) {
+            $trackingParameters['p'] = $productId;
         }
 
         return $trackingParameters;

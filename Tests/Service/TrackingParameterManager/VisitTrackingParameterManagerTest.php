@@ -11,7 +11,7 @@ class VisitTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
     public function testExtractWithParameters()
     {
         $query = $this->prophesize(ParameterBag::class);
-        $query->get('visit')->willReturn(5)->shouldBeCalledTimes(1);
+        $query->get('v')->willReturn(5)->shouldBeCalledTimes(1);
 
         $manager = new VisitTrackingParameterManager(1);
 
@@ -19,14 +19,14 @@ class VisitTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $result);
 
-        $this->assertArrayHasKey('visit', $result);
-        $this->assertEquals(5, $result['visit']);
+        $this->assertArrayHasKey('v', $result);
+        $this->assertEquals(5, $result['v']);
     }
 
     public function testExtractWithoutParametersButCookies()
     {
         $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->get('visit')->willReturn(5)->shouldBeCalledTimes(1);
+        $cookies->get('v')->willReturn(5)->shouldBeCalledTimes(1);
 
         $manager = new VisitTrackingParameterManager(1);
 
@@ -34,8 +34,8 @@ class VisitTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $result);
 
-        $this->assertArrayHasKey('visit', $result);
-        $this->assertEquals(5, $result['visit']);
+        $this->assertArrayHasKey('v', $result);
+        $this->assertEquals(5, $result['v']);
     }
 
     public function testInitialise()
@@ -45,7 +45,7 @@ class VisitTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $result = $manager->initialize();
 
         $this->assertCount(1, $result);
-        $this->assertArrayHasKey('visit', $result);
-        $this->assertEquals(1, $result['visit']);
+        $this->assertArrayHasKey('v', $result);
+        $this->assertEquals(1, $result['v']);
     }
 }

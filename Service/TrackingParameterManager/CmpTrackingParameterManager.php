@@ -33,8 +33,8 @@ class CmpTrackingParameterManager implements TrackingParameterQueryExtracterInte
     {
         $trackingParameters = [];
 
-        if (null !== $cmp = $query->get('cmp')) {
-            $trackingParameters['cmp'] = $cmp;
+        if (null !== $cmp = $query->get('c')) {
+            $trackingParameters['c'] = $cmp;
         }
 
         return $trackingParameters;
@@ -47,8 +47,8 @@ class CmpTrackingParameterManager implements TrackingParameterQueryExtracterInte
     {
         $trackingParameters = [];
 
-        if (null !== $cmp = $cookies->get('cmp')) {
-            $trackingParameters['cmp'] = $cmp;
+        if (null !== $cmp = $cookies->get('c')) {
+            $trackingParameters['c'] = $cmp;
         }
 
         return $trackingParameters;
@@ -60,7 +60,7 @@ class CmpTrackingParameterManager implements TrackingParameterQueryExtracterInte
     public function initialize()
     {
         return [
-            'cmp' => $this->defaultCmp,
+            'c' => $this->defaultCmp,
         ];
     }
 }

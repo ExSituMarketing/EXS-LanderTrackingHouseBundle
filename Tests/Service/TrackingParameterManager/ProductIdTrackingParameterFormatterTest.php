@@ -18,14 +18,14 @@ class ProductIdTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCas
 
         $this->assertCount(1, $result);
 
-        $this->assertArrayHasKey('product_id', $result);
-        $this->assertEquals(5, $result['product_id']);
+        $this->assertArrayHasKey('p', $result);
+        $this->assertEquals(5, $result['p']);
     }
 
     public function testExtractFromCookies()
     {
         $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->get('product_id')->willReturn(5)->shouldBeCalledTimes(1);
+        $cookies->get('p')->willReturn(5)->shouldBeCalledTimes(1);
 
         $manager = new ProductIdTrackingParameterManager();
 
@@ -33,7 +33,7 @@ class ProductIdTrackingParameterFormatterTest extends \PHPUnit_Framework_TestCas
 
         $this->assertCount(1, $result);
 
-        $this->assertArrayHasKey('product_id', $result);
-        $this->assertEquals(5, $result['product_id']);
+        $this->assertArrayHasKey('p', $result);
+        $this->assertEquals(5, $result['p']);
     }
 }

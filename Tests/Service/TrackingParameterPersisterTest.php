@@ -19,7 +19,7 @@ class TrackingParameterPersisterTest extends \PHPUnit_Framework_TestCase
         $trackingParameters = $reflector->getProperty('defaultTrackingParameters');
         $trackingParameters->setAccessible(true);
         $trackingParameters->setValue($persister, new ParameterBag([
-            'cmp' => 123,
+            'c' => 123,
             'u' => 'defaultExid',
         ]));
 
@@ -27,15 +27,15 @@ class TrackingParameterPersisterTest extends \PHPUnit_Framework_TestCase
         $trackingParameters->setAccessible(true);
         $trackingParameters->setValue($persister, new ParameterBag([
             'u' => 'UUID0123456789',
-            'visit' => 5,
+            'v' => 5,
         ]));
 
         $result = $persister->getAllTrackingParameters();
 
         $this->assertInstanceOf(ParameterBag::class, $result);
-        $this->assertEquals(123, $result->get('cmp'));
+        $this->assertEquals(123, $result->get('c'));
         $this->assertEquals('UUID0123456789', $result->get('u'));
-        $this->assertEquals(5, $result->get('visit'));
+        $this->assertEquals(5, $result->get('v'));
     }
 
     public function testGetDefaultTrackingParameters()
@@ -46,21 +46,21 @@ class TrackingParameterPersisterTest extends \PHPUnit_Framework_TestCase
         $trackingParameters = $reflector->getProperty('defaultTrackingParameters');
         $trackingParameters->setAccessible(true);
         $trackingParameters->setValue($persister, new ParameterBag([
-            'cmp' => 123,
+            'c' => 123,
             'u' => 'UUID0123456789',
         ]));
 
         $result = $persister->getDefaultTrackingParameters();
 
         $this->assertInstanceOf(ParameterBag::class, $result);
-        $this->assertEquals(123, $result->get('cmp'));
+        $this->assertEquals(123, $result->get('c'));
         $this->assertEquals('UUID0123456789', $result->get('u'));
     }
 
     public function testSetDefaultTrackingParameters()
     {
         $trackingParameters = new ParameterBag([
-            'cmp' => 123,
+            'c' => 123,
             'u' => 'UUID0123456789',
         ]);
 
@@ -80,25 +80,25 @@ class TrackingParameterPersisterTest extends \PHPUnit_Framework_TestCase
         $trackingParameters = $reflector->getProperty('trackingParameters');
         $trackingParameters->setAccessible(true);
         $trackingParameters->setValue($persister, new ParameterBag([
-            'cmp' => 123,
+            'c' => 123,
             'u' => 'UUID0123456789',
-            'visit' => null,
+            'v' => null,
             'foreign_id' => null,
         ]));
 
         $result = $persister->getTrackingParameters();
 
         $this->assertInstanceOf(ParameterBag::class, $result);
-        $this->assertEquals(123, $result->get('cmp'));
+        $this->assertEquals(123, $result->get('c'));
         $this->assertEquals('UUID0123456789', $result->get('u'));
     }
 
     public function testSetTrackingParameters()
     {
         $trackingParameters = new ParameterBag([
-            'cmp' => 123,
+            'c' => 123,
             'u' => 'UUID0123456789',
-            'visit' => null,
+            'v' => null,
             'foreign_id' => null,
         ]);
 
@@ -114,11 +114,11 @@ class TrackingParameterPersisterTest extends \PHPUnit_Framework_TestCase
     {
         $response = $this->prophesize(Response::class);
 
+        $inOneYear = new \DateTime('+1 year');
+
         $headers = $this->prophesize(ResponseHeaderBag::class);
-        $headers->setCookie(new Cookie('cmp', 123))->shouldBeCalledTimes(1);
-        $headers->setCookie(new Cookie('u', 'UUID0123456789'))->shouldBeCalledTimes(1);
-        $headers->setCookie(new Cookie('visit', null))->shouldBeCalledTimes(1);
-        $headers->setCookie(new Cookie('foreign_id', null))->shouldBeCalledTimes(1);
+        $headers->setCookie(new Cookie('c', 123, $inOneYear, '/', null, false, false))->shouldBeCalledTimes(1);
+        $headers->setCookie(new Cookie('v', 5, $inOneYear, '/', null, false, false))->shouldBeCalledTimes(1);
 
         $response->headers = $headers;
 
@@ -126,10 +126,9 @@ class TrackingParameterPersisterTest extends \PHPUnit_Framework_TestCase
 
         $extracters = $this->prophesize(ParameterBag::class);
         $extracters->all()->willReturn([
-            'cmp' => 123,
+            'c' => 123,
             'u' => 'UUID0123456789',
-            'visit' => null,
-            'foreign_id' => null,
+            'v' => 5,
         ])->shouldBeCalledTimes(1);
 
         $reflector = new \ReflectionObject($persister);
