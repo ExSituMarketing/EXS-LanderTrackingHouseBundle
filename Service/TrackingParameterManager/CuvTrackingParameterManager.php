@@ -22,10 +22,10 @@ class CuvTrackingParameterManager implements TrackingParameterQueryExtracterInte
 
         if (
             (null !== $cuv = $query->get('cuv'))
-            && (preg_match('`^(?<cmp>[a-z0-9]+)~(?<exid>[a-z0-9]+)~(?<visit>[a-z0-9]+)$`i', $cuv, $matches))
+            && (preg_match('`^(?<cmp>[a-z0-9]+)~(?<u>[a-z0-9]+)~(?<visit>[a-z0-9]+)$`i', $cuv, $matches))
         ) {
             $trackingParameters['cmp'] = $matches['cmp'];
-            $trackingParameters['exid'] = $matches['exid'];
+            $trackingParameters['u'] = $matches['u'];
             $trackingParameters['visit'] = $matches['visit'];
         }
 
@@ -43,13 +43,13 @@ class CuvTrackingParameterManager implements TrackingParameterQueryExtracterInte
 
         if (
             $trackingParameters->has('cmp')
-            && $trackingParameters->has('exid')
+            && $trackingParameters->has('u')
             && $trackingParameters->has('visit')
         ) {
             $cuv = sprintf(
                 '%s~%s~%s',
                 $trackingParameters->get('cmp'),
-                $trackingParameters->get('exid'),
+                $trackingParameters->get('u'),
                 $trackingParameters->get('visit')
             );
         }

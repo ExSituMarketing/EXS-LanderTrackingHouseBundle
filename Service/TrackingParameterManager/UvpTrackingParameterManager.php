@@ -22,9 +22,9 @@ class UvpTrackingParameterManager implements TrackingParameterQueryExtracterInte
 
         if (
             (null !== $uvp = $query->get('uvp'))
-            && (preg_match('`^(?<exid>[a-z0-9]+)~(?<visit>[a-z0-9]+)~(?<product_id>[a-z0-9]+)$`i', $uvp, $matches))
+            && (preg_match('`^(?<u>[a-z0-9]+)~(?<visit>[a-z0-9]+)~(?<product_id>[a-z0-9]+)$`i', $uvp, $matches))
         ) {
-            $trackingParameters['exid'] = $matches['exid'];
+            $trackingParameters['u'] = $matches['u'];
             $trackingParameters['visit'] = $matches['visit'];
             $trackingParameters['product_id'] = $matches['product_id'];
         }
@@ -42,13 +42,13 @@ class UvpTrackingParameterManager implements TrackingParameterQueryExtracterInte
         $uvp = null;
 
         if (
-            $trackingParameters->has('exid')
+            $trackingParameters->has('u')
             && $trackingParameters->has('visit')
             && $trackingParameters->has('product_id')
         ) {
             $uvp = sprintf(
                 '%s~%s~%s',
-                $trackingParameters->get('exid'),
+                $trackingParameters->get('u'),
                 $trackingParameters->get('visit'),
                 $trackingParameters->get('product_id')
             );

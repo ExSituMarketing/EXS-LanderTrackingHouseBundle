@@ -22,9 +22,9 @@ class UvTrackingParameterManager implements TrackingParameterQueryExtracterInter
 
         if (
             (null !== $uv = $query->get('uv'))
-            && (preg_match('`^(?<exid>[a-z0-9]+)~(?<visit>[a-z0-9]+)$`i', $uv, $matches))
+            && (preg_match('`^(?<u>[a-z0-9]+)~(?<visit>[a-z0-9]+)$`i', $uv, $matches))
         ) {
-            $trackingParameters['exid'] = $matches['exid'];
+            $trackingParameters['u'] = $matches['u'];
             $trackingParameters['visit'] = $matches['visit'];
         }
 
@@ -41,12 +41,12 @@ class UvTrackingParameterManager implements TrackingParameterQueryExtracterInter
         $uv = null;
 
         if (
-            $trackingParameters->has('exid')
+            $trackingParameters->has('u')
             && $trackingParameters->has('visit')
         ) {
             $uv = sprintf(
                 '%s~%s',
-                $trackingParameters->get('exid'),
+                $trackingParameters->get('u'),
                 $trackingParameters->get('visit')
             );
         }

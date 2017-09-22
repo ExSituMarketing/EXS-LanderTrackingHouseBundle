@@ -22,10 +22,10 @@ class CupTrackingParameterManager implements TrackingParameterQueryExtracterInte
 
         if (
             (null !== $cup = $query->get('cup'))
-            && (preg_match('`^(?<cmp>[a-z0-9]+)~(?<exid>[a-z0-9]+)~(?<product_id>[a-z0-9]+)$`i', $cup, $matches))
+            && (preg_match('`^(?<cmp>[a-z0-9]+)~(?<u>[a-z0-9]+)~(?<product_id>[a-z0-9]+)$`i', $cup, $matches))
         ) {
             $trackingParameters['cmp'] = $matches['cmp'];
-            $trackingParameters['exid'] = $matches['exid'];
+            $trackingParameters['u'] = $matches['u'];
             $trackingParameters['product_id'] = $matches['product_id'];
         }
 
@@ -43,13 +43,13 @@ class CupTrackingParameterManager implements TrackingParameterQueryExtracterInte
 
         if (
             $trackingParameters->has('cmp')
-            && $trackingParameters->has('exid')
+            && $trackingParameters->has('u')
             && $trackingParameters->has('product_id')
         ) {
             $cup = sprintf(
                 '%s~%s~%s',
                 $trackingParameters->get('cmp'),
-                $trackingParameters->get('exid'),
+                $trackingParameters->get('u'),
                 $trackingParameters->get('product_id')
             );
         }

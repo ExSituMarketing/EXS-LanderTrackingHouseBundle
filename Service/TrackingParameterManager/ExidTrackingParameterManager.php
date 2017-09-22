@@ -35,7 +35,7 @@ class ExidTrackingParameterManager implements TrackingParameterQueryExtracterInt
 
         $foundParameter = array_intersect(['exid', 'u', 'uuid'], $query->keys());
         if (count($foundParameter) >= 1) {
-            $trackingParameters['exid'] = $query->get(current($foundParameter));
+            $trackingParameters['u'] = $query->get(current($foundParameter));
         }
 
         return $trackingParameters;
@@ -50,7 +50,7 @@ class ExidTrackingParameterManager implements TrackingParameterQueryExtracterInt
 
         $foundParameter = array_intersect(['exid', 'u', 'uuid'], $cookies->keys());
         if (count($foundParameter) >= 1) {
-            $trackingParameters['exid'] = $cookies->get(current($foundParameter));
+            $trackingParameters['u'] = $cookies->get(current($foundParameter));
         }
 
         return $trackingParameters;
@@ -62,7 +62,7 @@ class ExidTrackingParameterManager implements TrackingParameterQueryExtracterInt
     public function initialize()
     {
         return [
-            'exid' => $this->defaultExid,
+            'u' => $this->defaultExid,
         ];
     }
 }

@@ -19,8 +19,8 @@ class ExidTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $result);
 
-        $this->assertArrayHasKey('exid', $result);
-        $this->assertEquals('EXID0123456789', $result['exid']);
+        $this->assertArrayHasKey('u', $result);
+        $this->assertEquals('EXID0123456789', $result['u']);
     }
 
     public function testExtractFromCookies()
@@ -35,8 +35,8 @@ class ExidTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $result);
 
-        $this->assertArrayHasKey('exid', $result);
-        $this->assertEquals('EXID0123456789', $result['exid']);
+        $this->assertArrayHasKey('u', $result);
+        $this->assertEquals('EXID0123456789', $result['u']);
     }
 
     public function testInitialize()
@@ -46,7 +46,7 @@ class ExidTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $result = $manager->initialize();
 
         $this->assertCount(1, $result);
-        $this->assertArrayHasKey('exid', $result);
-        $this->assertEquals(1, $result['exid']);
+        $this->assertArrayHasKey('u', $result);
+        $this->assertEquals(1, $result['u']);
     }
 }
