@@ -90,7 +90,15 @@ class TrackingParameterPersister
         $trackingParameters = $this->trackingParameters->all();
 
         foreach ($trackingParameters as $trackingParameter => $value) {
-            $response->headers->setCookie(new Cookie($trackingParameter, $value));
+            $response->headers->setCookie(new Cookie(
+                $trackingParameter,
+                $value,
+                new \DateTime('+1 year'),
+                '/',
+                null,
+                false,
+                false
+            ));
         }
 
         return $response;
