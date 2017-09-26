@@ -112,15 +112,13 @@ class TrackingParameterPersisterTest extends \PHPUnit_Framework_TestCase
 
     public function testPersist()
     {
-        $response = $this->prophesize(Response::class);
-
-        $headers = $this->prophesize(ResponseHeaderBag::class);
-        $headers->setCookie(new Cookie('c', 123, new \DateTime('+1 year'), '/', null, false, false))->shouldBeCalledTimes(1);
-        $headers->setCookie(new Cookie('v', 5, new \DateTime('+1 year'), '/', null, false, false))->shouldBeCalledTimes(1);
-
-        $response->headers = $headers;
-
         $persister = new TrackingParameterPersister();
+
+        $reflector = new \ReflectionObject($persister);
+
+        $property = $reflector->getProperty('expirationDate');
+        $property->setAccessible(true);
+        $expirationDate = $property->getValue($persister);
 
         $extracters = $this->prophesize(ParameterBag::class);
         $extracters->all()->willReturn([
@@ -129,11 +127,16 @@ class TrackingParameterPersisterTest extends \PHPUnit_Framework_TestCase
             'v' => 5,
         ])->shouldBeCalledTimes(1);
 
-        $reflector = new \ReflectionObject($persister);
+        $property = $reflector->getProperty('trackingParameters');
+        $property->setAccessible(true);
+        $property->setValue($persister, $extracters->reveal());
 
-        $trackingParameters = $reflector->getProperty('trackingParameters');
-        $trackingParameters->setAccessible(true);
-        $trackingParameters->setValue($persister, $extracters->reveal());
+        $headers = $this->prophesize(ResponseHeaderBag::class);
+        $headers->setCookie(new Cookie('c', 123, $expirationDate, '/', null, false, false))->shouldBeCalledTimes(1);
+        $headers->setCookie(new Cookie('v', 5, $expirationDate, '/', null, false, false))->shouldBeCalledTimes(1);
+
+        $response = $this->prophesize(Response::class);
+        $response->headers = $headers;
 
         $persister->persist($response->reveal());
     }

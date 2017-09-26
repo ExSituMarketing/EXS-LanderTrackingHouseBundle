@@ -29,6 +29,11 @@ class TrackingParameterPersister
     private $trackingParameters;
 
     /**
+     * @var \DateTime
+     */
+    private $expirationDate;
+
+    /**
      * TrackingParameterPersister constructor.
      *
      * @param array $cookiesToSave
@@ -38,6 +43,7 @@ class TrackingParameterPersister
         $this->cookiesToSave = $cookiesToSave;
         $this->defaultTrackingParameters = new ParameterBag();
         $this->trackingParameters = new ParameterBag();
+        $this->expirationDate = new \DateTime('+1 year');
     }
 
     /**
@@ -105,7 +111,7 @@ class TrackingParameterPersister
                 $response->headers->setCookie(new Cookie(
                     $trackingParameter,
                     $value,
-                    new \DateTime('+1 year'),
+                    $this->expirationDate,
                     '/',
                     null,
                     false,
