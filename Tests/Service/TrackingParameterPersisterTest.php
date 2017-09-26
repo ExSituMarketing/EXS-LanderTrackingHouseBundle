@@ -114,11 +114,9 @@ class TrackingParameterPersisterTest extends \PHPUnit_Framework_TestCase
     {
         $response = $this->prophesize(Response::class);
 
-        $inOneYear = new \DateTime('+1 year');
-
         $headers = $this->prophesize(ResponseHeaderBag::class);
-        $headers->setCookie(new Cookie('c', 123, $inOneYear, '/', null, false, false))->shouldBeCalledTimes(1);
-        $headers->setCookie(new Cookie('v', 5, $inOneYear, '/', null, false, false))->shouldBeCalledTimes(1);
+        $headers->setCookie(new Cookie('c', 123, new \DateTime('+1 year'), '/', null, false, false))->shouldBeCalledTimes(1);
+        $headers->setCookie(new Cookie('v', 5, new \DateTime('+1 year'), '/', null, false, false))->shouldBeCalledTimes(1);
 
         $response->headers = $headers;
 
