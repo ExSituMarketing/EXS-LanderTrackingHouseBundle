@@ -65,14 +65,14 @@ class TrackingParameterExtracter
     {
         $trackingParameters = new ParameterBag();
 
-        /** Get value from cookies. */
+        /* Get value from cookies. */
         foreach ($this->extracters as $extracter) {
             if ($extracter instanceof TrackingParameterCookieExtracterInterface) {
                 $trackingParameters->add($extracter->extractFromCookies($request->cookies));
             }
         }
 
-        /** Override cookies' value by query's value if set. */
+        /* Override cookies' value by query's value if set. */
         foreach ($this->extracters as $extracter) {
             if ($extracter instanceof TrackingParameterQueryExtracterInterface) {
                 $trackingParameters->add($extracter->extractFromQuery($request->query));

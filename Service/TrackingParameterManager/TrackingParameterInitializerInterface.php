@@ -2,8 +2,6 @@
 
 namespace EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager;
 
-use Symfony\Component\HttpFoundation\Request;
-
 /**
  * Interface TrackingParameterInitializerInterface
  *

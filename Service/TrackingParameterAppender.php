@@ -67,13 +67,13 @@ class TrackingParameterAppender
     {
         return sprintf(
             '%s%s%s%s%s%s%s',
-            isset($urlComponents['scheme']) ? $urlComponents['scheme'] . '://' : '',
-            isset($urlComponents['user']) ? $urlComponents['user'] . (isset($urlComponents['pass']) ? ':' . $urlComponents['pass'] : '') . '@' : '',
+            isset($urlComponents['scheme']) ? $urlComponents['scheme'].'://' : '',
+            isset($urlComponents['user']) ? $urlComponents['user'].(isset($urlComponents['pass']) ? ':'.$urlComponents['pass'] : '').'@' : '',
             isset($urlComponents['host']) ? $urlComponents['host'] : '',
-            isset($urlComponents['port']) ? ':' . $urlComponents['port'] : '',
+            isset($urlComponents['port']) ? ':'.$urlComponents['port'] : '',
             isset($urlComponents['path']) ? $urlComponents['path'] : '',
-            isset($urlComponents['query']) ? '?' . $urlComponents['query'] : '',
-            isset($urlComponents['fragment']) ? '#' . $urlComponents['fragment'] : ''
+            isset($urlComponents['query']) ? '?'.$urlComponents['query'] : '',
+            isset($urlComponents['fragment']) ? '#'.$urlComponents['fragment'] : ''
         );
     }
 
@@ -109,14 +109,14 @@ class TrackingParameterAppender
             );
         }
 
-        /** Search for tracking parameters to replace in query's parameters. */
+        /* Search for tracking parameters to replace in query's parameters. */
         foreach ($parameters as $parameterName => $parameterValue) {
             if (preg_match('`^{\s?(?<parameter>[a-z0-9_]+)\s?}$`i', $parameterValue, $matches)) {
                 $parameters[$parameterName] = $trackingParameters->get($matches['parameter'], null);
             }
         }
 
-        /** Rebuild the query parameters string. */
+        /* Rebuild the query parameters string. */
         $urlComponents['query'] = http_build_query($parameters, null, '&', PHP_QUERY_RFC3986);
         if (true === empty($urlComponents['query'])) {
             /* Force to null to avoid single "?" at the end of url */
@@ -168,7 +168,7 @@ class TrackingParameterAppender
         $foundFormatters = array_filter(array_keys($this->formatters), function ($formatterIdentifier) use ($formatterName) {
             $pattern = sprintf('`^(?:(?:.*)\.)?%s(?:_(?:.*))?$`i', $formatterName);
 
-            return (0 !== (int)preg_match($pattern, $formatterIdentifier));
+            return 0 !== (int)preg_match($pattern, $formatterIdentifier);
         });
 
         if (empty($foundFormatters)) {
