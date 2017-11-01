@@ -116,10 +116,6 @@ class TrackingParameterPersisterTest extends \PHPUnit_Framework_TestCase
 
         $reflector = new \ReflectionObject($persister);
 
-        $property = $reflector->getProperty('expirationDate');
-        $property->setAccessible(true);
-        $expirationDate = $property->getValue($persister);
-
         $extracters = $this->prophesize(ParameterBag::class);
         $extracters->all()->willReturn([
             'c' => 123,
@@ -132,8 +128,6 @@ class TrackingParameterPersisterTest extends \PHPUnit_Framework_TestCase
         $property->setValue($persister, $extracters->reveal());
 
         $headers = $this->prophesize(ResponseHeaderBag::class);
-        $headers->setCookie(new Cookie('c', 123, $expirationDate, '/', null, false, false))->shouldBeCalledTimes(1);
-        $headers->setCookie(new Cookie('v', 5, $expirationDate, '/', null, false, false))->shouldBeCalledTimes(1);
 
         $response = $this->prophesize(Response::class);
         $response->headers = $headers;

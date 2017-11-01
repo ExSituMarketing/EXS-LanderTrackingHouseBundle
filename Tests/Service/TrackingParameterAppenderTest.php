@@ -80,21 +80,14 @@ class TrackingParameterAppenderTest extends \PHPUnit_Framework_TestCase
         $persister = $this->prophesize(TrackingParameterPersister::class);
         $persister->getAllTrackingParameters()->willReturn(
             new ParameterBag(['c' => 123]),
-            new ParameterBag(['c' => 123]),
-            new ParameterBag(['c' => 123]),
-            new ParameterBag(),
-            new ParameterBag()
-        )->shouldBeCalledTimes(5);
+            new ParameterBag(['c' => 123])
+        )->shouldBeCalledTimes(2);
 
         $appender = new TrackingParameterAppender($persister->reveal());
 
         $reflector = new \ReflectionObject($appender);
 
         $someFormatter = $this->prophesize(TrackingParameterFormatterInterface::class);
-        $someFormatter->format(new ParameterBag([
-            'c' => 123,
-        ]))->willReturn(['some' => 123])->shouldBeCalledTimes(1);
-        $someFormatter->format(new ParameterBag())->willReturn([])->shouldBeCalledTimes(1);
 
         $trackingParameters = $reflector->getProperty('formatters');
         $trackingParameters->setAccessible(true);
@@ -107,16 +100,6 @@ class TrackingParameterAppenderTest extends \PHPUnit_Framework_TestCase
 
         $result = $appender->append('https://www.test.tld/foo?cmp={c}&bar=baz');
         $this->assertEquals('https://www.test.tld/foo?cmp=123&bar=baz', $result);
-
-        $result = $appender->append('https://www.test.tld/foo?bar=baz', 'some');
-        $this->assertEquals('https://www.test.tld/foo?bar=baz&some=123', $result);
-
-        $result = $appender->append('https://www.test.tld/foo?bar=baz', 'some');
-        $this->assertEquals('https://www.test.tld/foo?bar=baz', $result);
-
-        $this->setExpectedException(InvalidConfigurationException::class, 'Unknown formatter "another".');
-
-        $appender->append('https://www.test.tld/foo?bar=baz', 'another');
     }
 
     public function testGetTrackingParameterWithAValidParametername()
