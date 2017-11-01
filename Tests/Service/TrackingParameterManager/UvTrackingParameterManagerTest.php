@@ -53,4 +53,13 @@ class UvTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('uv', $result);
         $this->assertEquals('UUID987654321~5', $result['uv']);
     }
+
+    public function testCheckFormatWithEmptyArray()
+    {
+        $trackingParameters = new ParameterBag([]);
+
+        $formatter = new UvTrackingParameterManager();
+
+        $result = $formatter->checkFormat($trackingParameters);
+    }
 }

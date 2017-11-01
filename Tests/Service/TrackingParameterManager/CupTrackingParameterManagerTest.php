@@ -43,11 +43,13 @@ class CupTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatWithAllParameters()
     {
-        $trackingParameters = new ParameterBag([
-            'c' => 123,
-            'u' => 'UUID987654321',
-            'p' => 5,
-        ]);
+        $trackingParameters = new ParameterBag(
+            [
+                'c' => 123,
+                'u' => 'UUID987654321',
+                'p' => 5,
+            ]
+        );
 
         $formatter = new CupTrackingParameterManager();
 
@@ -56,5 +58,14 @@ class CupTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $result);
         $this->assertArrayHasKey('cup', $result);
         $this->assertEquals('123~UUID987654321~5', $result['cup']);
+    }
+
+    public function testCheckFormatWithEmptyArray()
+    {
+        $trackingParameters = new ParameterBag([]);
+
+        $formatter = new CupTrackingParameterManager();
+
+        $result = $formatter->checkFormat($trackingParameters);
     }
 }

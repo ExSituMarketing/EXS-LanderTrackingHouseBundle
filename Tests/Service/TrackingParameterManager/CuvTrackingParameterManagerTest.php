@@ -61,4 +61,13 @@ class CuvTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('cuv', $result);
         $this->assertEquals('123~UUID987654321~5', $result['cuv']);
     }
+
+    public function testCheckFormatWithEmptyArray()
+    {
+        $trackingParameters = new ParameterBag([]);
+
+        $formatter = new CuvTrackingParameterManager();
+
+        $result = $formatter->checkFormat($trackingParameters);
+    }
 }

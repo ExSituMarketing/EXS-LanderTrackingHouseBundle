@@ -54,4 +54,13 @@ class CuTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('cu', $result);
         $this->assertEquals('123~UUID987654321', $result['cu']);
     }
+
+    public function testCheckFormatWithEmptyArray()
+    {
+        $trackingParameters = new ParameterBag([]);
+
+        $formatter = new CuTrackingParameterManager();
+
+        $result = $formatter->checkFormat($trackingParameters);
+    }
 }

@@ -57,4 +57,13 @@ class UvpTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('uvp', $result);
         $this->assertEquals('UUID987654321~5~5', $result['uvp']);
     }
+
+    public function testCheckFormatWithEmptyArray()
+    {
+        $trackingParameters = new ParameterBag([]);
+
+        $formatter = new UvpTrackingParameterManager();
+
+        $result = $formatter->checkFormat($trackingParameters);
+    }
 }
