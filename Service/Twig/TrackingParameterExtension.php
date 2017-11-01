@@ -42,7 +42,7 @@ class TrackingParameterExtension extends \Twig_Extension
      * @param string $url
      * @param string $formatterName
      *
-     * @return string
+     * @return string|null
      */
     public function appendTracking($url, $formatterName = null)
     {
