@@ -61,4 +61,14 @@ class CuvpTrackingParameterManager implements TrackingParameterQueryExtracterInt
             'cuvp' => $cuvp,
         ];
     }
+
+    /**
+     * @param  $parameters
+     *
+     * @return ParameterBag
+     */
+    public function checkFormat($parameters)
+    {
+        return $parameters;
+    }
 }

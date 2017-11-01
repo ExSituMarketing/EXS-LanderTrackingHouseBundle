@@ -55,4 +55,14 @@ class UvTrackingParameterManager implements TrackingParameterQueryExtracterInter
             'uv' => $uv,
         ];
     }
+
+    /**
+     * @param  $parameters
+     *
+     * @return ParameterBag
+     */
+    public function checkFormat($parameters)
+    {
+        return $parameters;
+    }
 }

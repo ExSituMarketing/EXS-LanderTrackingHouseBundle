@@ -49,7 +49,9 @@ class TrackingParameterAppender
     {
         foreach ($formatters as $formatterName => $formatter) {
             if (!$formatter instanceof TrackingParameterFormatterInterface) {
-                throw new InvalidConfigurationException(sprintf('Invalid tracking parameter formatter "%s".', $formatterName));
+                throw new InvalidConfigurationException(
+                    sprintf('Invalid tracking parameter formatter "%s".', $formatterName)
+                );
             }
         }
 
@@ -107,16 +109,18 @@ class TrackingParameterAppender
                 $parameters,
                 $this->formatters[$foundFormatter]->format($trackingParameters)
             );
+
+            $parameters = $this->formatters[$foundFormatter]->checkFormat($parameters);
         }
 
-        /* Search for tracking parameters to replace in query's parameters. */
+        /** Search for tracking parameters to replace in query's parameters. */
         foreach ($parameters as $parameterName => $parameterValue) {
             if (preg_match('`^{\s?(?<parameter>[a-z0-9_]+)\s?}$`i', $parameterValue, $matches)) {
                 $parameters[$parameterName] = $trackingParameters->get($matches['parameter'], null);
             }
         }
 
-        /* Rebuild the query parameters string. */
+        /** Rebuild the query parameters string. */
         $urlComponents['query'] = http_build_query($parameters, null, '&', PHP_QUERY_RFC3986);
         if (true === empty($urlComponents['query'])) {
             /* Force to null to avoid single "?" at the end of url */
@@ -165,11 +169,14 @@ class TrackingParameterAppender
      */
     private function findFormatterByName($formatterName)
     {
-        $foundFormatters = array_filter(array_keys($this->formatters), function ($formatterIdentifier) use ($formatterName) {
-            $pattern = sprintf('`^(?:(?:.*)\.)?%s(?:_(?:.*))?$`i', $formatterName);
+        $foundFormatters = array_filter(
+            array_keys($this->formatters),
+            function ($formatterIdentifier) use ($formatterName) {
+                $pattern = sprintf('`^(?:(?:.*)\.)?%s(?:_(?:.*))?$`i', $formatterName);
 
-            return 0 !== (int)preg_match($pattern, $formatterIdentifier);
-        });
+                return (0 !== (int) preg_match($pattern, $formatterIdentifier));
+            }
+        );
 
         if (empty($foundFormatters)) {
             return null;

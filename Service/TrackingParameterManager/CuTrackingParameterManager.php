@@ -55,4 +55,14 @@ class CuTrackingParameterManager implements TrackingParameterQueryExtracterInter
             'cu' => $cu,
         ];
     }
+
+    /**
+     * @param  $parameters
+     *
+     * @return ParameterBag
+     */
+    public function checkFormat($parameters)
+    {
+        return $parameters;
+    }
 }

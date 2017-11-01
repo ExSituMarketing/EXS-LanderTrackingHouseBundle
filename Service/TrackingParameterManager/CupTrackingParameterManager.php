@@ -58,4 +58,14 @@ class CupTrackingParameterManager implements TrackingParameterQueryExtracterInte
             'cup' => $cup,
         ];
     }
+
+    /**
+     * @param  $parameters
+     *
+     * @return ParameterBag
+     */
+    public function checkFormat($parameters)
+    {
+        return $parameters;
+    }
 }

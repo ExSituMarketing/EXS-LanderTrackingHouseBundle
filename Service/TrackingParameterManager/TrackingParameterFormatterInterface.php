@@ -20,4 +20,14 @@ interface TrackingParameterFormatterInterface
      * @return array
      */
     public function format(ParameterBag $trackingParameters);
+
+    /**
+     * Receive all the tracking parameters.
+     * Returns a key/value array of parameters to append to any url as query parameters.
+     *
+     * @param $parameters
+     *
+     * @return array
+     */
+    public function checkFormat($parameters);
 }

@@ -52,7 +52,7 @@ class TrackingParameterExtension extends \Twig_Extension
     /**
      * @param string $parameterName
      *
-     * @return string|null
+     * @return string
      */
     public function getTracking($parameterName)
     {
