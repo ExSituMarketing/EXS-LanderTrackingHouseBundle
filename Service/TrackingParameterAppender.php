@@ -115,7 +115,7 @@ class TrackingParameterAppender
 
         /** Search for tracking parameters to replace in query's parameters. */
         foreach ($parameters as $parameterName => $parameterValue) {
-            if (preg_match('`^{\s?(?<parameter>[a-z0-9_]+)\s?}$`i', $parameterValue, $matches)) {
+            if (!is_array($parameterValue) && preg_match('`^{\s?(?<parameter>[a-z0-9_]+)\s?}$`i', $parameterValue, $matches)) {
                 $parameters[$parameterName] = $trackingParameters->get($matches['parameter'], null);
             }
         }
